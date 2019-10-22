@@ -56,11 +56,11 @@ function CHECK_S3_GET_SCRIPT () {
 	then
 		echo "AC2SP"
 		#echo $HOSTNAME_VALUE
-		aws s3 cp s3://i2ar-testteam-uac2sp/prefix_count_compare_tool_SP82.sh /var/i2ar/compare_major-counts
+		aws s3 cp s3://i2ar-testteam-uac2sp/major_counts_compare_tool_SP82.sh /var/i2ar/compare_major-counts
 	else
 		echo "GovCloud"
 		#echo $HOSTNAME_VALUE
-		aws s3 cp s3://testteam/Khai/Scripts/prefix_count_compare_tool_SP82.sh /var/i2ar/compare_major-counts
+		aws s3 cp s3://testteam/Khai/Scripts/major_counts_compare_tool_SP82.sh /var/i2ar/compare_major-counts
 	fi
 }
 
