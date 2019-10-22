@@ -14,3 +14,4 @@ My setup:
   * platformio-ide
   * Tried installing Git-Plus (had issues connecting to GITHub.. abandoned the idea and got Github Desktop to work)
   * NOTE: after cloning a Repo into the linux subsystem it did take some time for the files to appear.
+  * making some edits
