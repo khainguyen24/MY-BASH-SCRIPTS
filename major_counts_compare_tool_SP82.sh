@@ -7,11 +7,8 @@
 #       3. (Required) I2AR_INPUT_FILE this is from the I2AR major-counts directory
 #       4. (Required) Specified OUTPUT_FILE Name to hold the results
 
-
-# Maybe in the future add function to locate the files autoamtically..echo "Finding ATTACHMENT_PHOTOS.TXT and attachment_photos.txt"
 #note for the matchml major count i had to change to use fgrep (due to the grep looking for range [])
 
-##################
 #parameters check (Script calls for 4 parameters to be passed in)
 if [ "$#" -ne 4 ]
 then
@@ -29,8 +26,6 @@ else
     I2AR_INPUT_FILE=$3
     OUTPUT_FILE=$4
 fi
-
-###################
 
 #user message this may take some time depending on file size
 echo "Working on it..may take some time depending on size of file.. hang tight.."
@@ -76,7 +71,7 @@ function prefixCount () {
 
 }
 
-# run stuff
+# run stuff (need to figure out if i need to add these var for it to work or if it's just redundant)
 totalCount $PREFIX_LIST  $BI2R_INPUT_FILE $I2AR_INPUT_FILE $OUTPUT_FILE
 prefixCount $PREFIX_LIST $BI2R_INPUT_FILE $I2AR_INPUT_FILE $OUTPUT_FILE
 
