@@ -69,7 +69,7 @@ else
     OUTPUT_FILE=$4
 fi
 
-#user message this may take some time depending on size of file
+#user message this may take some time depending on file size
 echo "Working on it..may take some time depending on size of file.. hang tight.."
 
 # function to grep using the prefix list (or should this funtion need to go line by line?)
@@ -79,6 +79,7 @@ function totalCount () {
         I2AR_INPUT_FILE=$3
         OUTPUT_FILE=$4
         #this is over kill.. gonna change it to just a simple cat $I2AR_INPUT_FILE | wc -l)
+        #on second thought it was useful showing that matchml didn't match
         I2ARTotal="$(grep -Ff $PREFIX_LIST $I2AR_INPUT_FILE | wc -l)"
         BI2RTotal="$(grep -Ff $PREFIX_LIST $BI2R_INPUT_FILE | wc -l)"
         BASENAME="$(basename $3 .txt)"
@@ -102,8 +103,8 @@ function prefixCount () {
 #Prefix count value for BI2R
         PREFIX_TYPE="$(cat $PREFIX_LIST | sed -n -e $p)"
         PREFIX_TYPE_COUNT_BI2R="$(cat $PREFIX_LIST | sed -n -e $p | xargs -i{} fgrep -i {} $BI2R_INPUT_FILE | wc -l)"
-        
-        #Prefix count value for I2AR
+
+#Prefix count value for I2AR
         PREFIX_TYPE_COUNT_I2AR="$(cat $PREFIX_LIST | sed -n -e $p | xargs -i{} fgrep -i {} $I2AR_INPUT_FILE | wc -l)"
         echo "$PREFIX_TYPE BI2R:$PREFIX_TYPE_COUNT_BI2R  I2AR:$PREFIX_TYPE_COUNT_I2AR" >> $OUTPUT_FILE
         ((i=i+1))
@@ -121,4 +122,3 @@ echo -e "Done processing: [ $PREFIX_LIST | $BI2R_INPUT_FILE | $I2AR_INPUT_FILE ]
 echo -e "See $OUTPUT_FILE for the results.\n"
 
 exit 0;
-
