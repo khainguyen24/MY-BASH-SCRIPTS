@@ -106,9 +106,9 @@ REDEPLOY_WAR () {
 	LIST1
         sleep 2
 	LIST2
-	sleep 2
+	      sleep 2
 	MAIN_CHECK_2
-	printf "\e[0m"
+	      printf "\e[0m"
 
 }
 #Status check
