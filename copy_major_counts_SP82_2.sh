@@ -1,11 +1,18 @@
 #!/bin/bash
-###############
+#
 # This is a supportive script that collects the BIR export_lists; I2AR major-counts; downloads the prefix_count_compare_tool_SP82.sh from either AC2SP or GovCloud S3.
 # Stages all the files in /var/i2ar/compare_major-counts_<SP##_YYYY-MM-DD>
 # Creats directories to hold BIR and I2AR count files..
 # Maybe in the future add function to locate the files automatically.. the count files from both BIR and I2AR
 # "Finding ATTACHMENT_PHOTOS.TXT and attachment_photos.txt" and put it in the proper directories
 # Check to see if $1 parameter was specified. required.. ie "SP82"
+
+# change Log
+# 10/22/19 updated the S3 locations the script on GovCloud and ac2sp
+# added function to locate/create compare directories to hold the I2AR and BIR count files.
+# TODO: note: there is one file that makes up the "total_identites" Major count that is not in the "major-counts" folder:
+# <YYYY-MM-DD>-bids_primary-post.txt .. this needs to be backed up to the compare_major-counts folder as well.
+
 if [ -z "$1" ]
 then
     echo -e "\nMissing parameter...exiting.\n"
