@@ -42,8 +42,13 @@ function totalCount () {
         BI2RTotal="$(grep -Ff $PREFIX_LIST $BI2R_INPUT_FILE | wc -l)"
         BASENAME="$(basename $3 .txt)"
 
+        #testing awk formatting (not totally nessacary but intresting to learn)
+        #echo "Total_Counts:${BASENAME}: BI2R:$BI2RTotal  I2AR:$I2ARTotal" | awk -F" " ' BEGIN { print "============================================================" , printf "%-45s %-9s %-9s\n" $1,$2,$3 , print "============================================================" }' >>  $OUTPUT_FILE
 
-        echo "Total Count for $BASENAME: BI2R:$BI2RTotal  I2ARTotal:$I2ARTotal" >>  $OUTPUT_FILE
+        #print the first line in output file.. formatting using awk original line below
+        echo "Total_Counts:\"${BASENAME}\" BI2R:$BI2RTotal  I2AR:$I2ARTotal" | awk '{ printf "%-45s %-9s %-9s\n" , $1,$2,$3 }' >>  $OUTPUT_FILE
+
+
 }
 
 
@@ -63,8 +68,11 @@ function prefixCount () {
         PREFIX_TYPE_COUNT_BI2R="$(cat $PREFIX_LIST | sed -n -e $p | xargs -i{} fgrep -i {} $BI2R_INPUT_FILE | wc -l)"
 
 #Prefix count value for I2AR
+
         PREFIX_TYPE_COUNT_I2AR="$(cat $PREFIX_LIST | sed -n -e $p | xargs -i{} fgrep -i {} $I2AR_INPUT_FILE | wc -l)"
-        echo "$PREFIX_TYPE BI2R:$PREFIX_TYPE_COUNT_BI2R  I2AR:$PREFIX_TYPE_COUNT_I2AR" >> $OUTPUT_FILE
+        #adding awk formatting to the output for readablity the original is commented out below:
+        #echo "$PREFIX_TYPE BI2R:$PREFIX_TYPE_COUNT_BI2R  I2AR:$PREFIX_TYPE_COUNT_I2AR" >> $OUTPUT_FILE
+        echo "$PREFIX_TYPE BI2R:$PREFIX_TYPE_COUNT_BI2R  I2AR:$PREFIX_TYPE_COUNT_I2AR" | awk '{ printf "%-45s %-9s %-9s\n" , $1,$2,$3 }' >> $OUTPUT_FILE
         ((i=i+1))
         # added just to test the value of echo "$i"
     done
