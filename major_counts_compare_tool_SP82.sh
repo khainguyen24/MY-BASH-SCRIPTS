@@ -27,8 +27,8 @@ else
     OUTPUT_FILE=$4
 fi
 
-#user message this may take some time depending on file size
-echo "Working on it..may take some time depending on size of file.. hang tight.."
+#user messege this may take some time depending on file size
+echo "Working on it.. may take some time depending on size of file.. hang tight.."
 
 # function to grep using the prefix list (or should this funtion need to go line by line?)
 function totalCount () {
@@ -45,7 +45,7 @@ function totalCount () {
         #testing awk formatting (not totally nessacary but intresting to learn)
         #echo "Total_Counts:${BASENAME}: BI2R:$BI2RTotal  I2AR:$I2ARTotal" | awk -F" " ' BEGIN { print "============================================================" , printf "%-45s %-9s %-9s\n" $1,$2,$3 , print "============================================================" }' >>  $OUTPUT_FILE
 
-        #print the first line in output file.. formatting using awk original line below
+        #print the first line in output file.. formatting using awk original line below can change spacing with these values "%-45s %-9s %-9s\n"
         echo "Total_Counts:\"${BASENAME}\" BI2R:$BI2RTotal  I2AR:$I2ARTotal" | awk '{ printf "%-45s %-9s %-9s\n" , $1,$2,$3 }' >>  $OUTPUT_FILE
 
 
