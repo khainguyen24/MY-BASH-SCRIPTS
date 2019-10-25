@@ -4,3 +4,4 @@ some automated_Im
 making some edits
 adding this comment while on vpn
 some more stuff
+Just updated Git hub intergration with atom. first change
