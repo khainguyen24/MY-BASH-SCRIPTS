@@ -8,3 +8,4 @@ Just updated Git hub intergration with atom. first change
 added
 
 adding some more stuff
+making some edits to add to branch_of_master
