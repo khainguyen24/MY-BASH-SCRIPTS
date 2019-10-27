@@ -3,6 +3,12 @@ some stuff added to this files on ATOM
 some automated_Im
 making some edits
 adding this comment while on vpn
+<<<<<<< HEAD
 
 Just updated Git hub intergration with atom. first change
 added
+=======
+some more stuff
+some edits from my macbook
+some edits
+>>>>>>> c836de17038bae6ded4f27959d5a67aaa39fd750
