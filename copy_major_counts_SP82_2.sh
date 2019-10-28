@@ -73,7 +73,8 @@ function CHECK_S3_GET_SCRIPT () {
 	fi
 }
 
-#could add the array script here
+# array script that takes all the count files in the major-count directory; strips the .txt; addes to an array; create directories with
+# .. _compare to it.
 function CREAT_DIR () {
 	#need to confirm path to the major-count directory to build the array
 
