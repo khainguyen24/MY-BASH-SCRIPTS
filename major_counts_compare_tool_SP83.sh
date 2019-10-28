@@ -7,11 +7,10 @@
 #       3. (Required) I2AR_INPUT_FILE this is from the I2AR major-counts directory
 #       4. (Required) Specified OUTPUT_FILE Name to hold the results
 
-
 # CHANGE LOG
 # 10/22/2019 note for the matchml major count i had to change to use fgrep (due to the grep looking for range [])
 # 10/28/2019 added Major_count (row_count) as the first line in the output files
-
+# had to resolve on github
 
 #parameters check (Script calls for 4 parameters to be passed in)
 if [ "$#" -ne 4 ]
