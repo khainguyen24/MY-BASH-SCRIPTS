@@ -4,6 +4,10 @@
 # Create arrays to hold all the files to copy over
 # Copy the txt files to the appropriate destination folder .. Ie *_compare folder
 
+# CHANGE LOG
+# 10/28/2019 rearanged the BIR array to match I2AR count files and the compare directory
+# udate the compare array aswell to match
+
 # Setting the variables for the script.
 BIR_counts_path=/root/my_fedora_folder/DV-53-majorCount/2019-10-15/export_lists/
 I2AR_counts_path=/root/my_fedora_folder/DV-53-majorCount/major-counts-Oct-15-2019/
@@ -14,8 +18,9 @@ TOTAL_IDENTITIES_DIR=/root/my_fedora_folder/compare_major-counts-test/total_iden
 
 #####################################
 <<COMMENT
-# just a cheatsheet of whats in the array
+# just a cheatsheet of whats in the array (gonna use these arrays with with a find and copy commands)
 # BI2R: these are the array positions for the elements in the "ARRAY_BIR_COUNT_FILES" array
+# 10/28/2019 rearanged the order to match the *_compare directorys
 [0]ATP_BIDS.TXT
 [1]ATTACHMENTS_PHOTOS.TXT
 [2]ATTRIBUTES.TXT
@@ -28,23 +33,26 @@ TOTAL_IDENTITIES_DIR=/root/my_fedora_folder/compare_major-counts-test/total_iden
 [9]EVENT_ENCOUNTERS.TXT
 [10]EVENTS.TXT
 [11]EXPORTED_MATCHML.TXT
-[12]INACTIVE_USP_BIDS.TXT
-[13]MATCHML.TXT
-[14]NOMINATED_WATCHLISTED_BIDS.TXT
-[15]NONSENSOR_RIR_TCNS.TXT
-[16]NONSENSOR_UHN_TCNS.TXT
-[17]PREVIOUS_WATCHLISTED_BIDS.TXT
-[18]PRIMARY_BIDS.TXT
-[19]PRODUCTS.TXT
-[20]PURGED_ALL_BIDS.TXT
-[21]PURGED_BIDS_UNIQUE.TXT
-[22]QUARANTINED_BIDS.TXT
-[23]RELATIONSHIP.TXT
-[24]SENSORS.TXT
-[25]THREAT_BIDS.TXT
-[26]TPWDES.TXT
-[27]TWPDES_EXP.TXT
-[28]WATCHLISTED_BIDS.TXT
+[12]NOMINATED_WATCHLISTED_BIDS.TXT
+[13]NONSENSOR_RIR_TCNS.TXT
+[14]NONSENSOR_UHN_TCNS.TXT
+[15]PREVIOUS_WATCHLISTED_BIDS.TXT
+[16]PRODUCTS.TXT
+[17]RELATIONSHIP.TXT
+[18]SENSORS.TXT
+[19]TWPDES_EXP.TXT
+[20]ACTIVE_USP_BIDS.TXT
+[21]INACTIVE_USP_BIDS.TXT
+[22]PURGED_BIDS_UNIQUE.TXT
+[23]QUARANTINED_BIDS.TXT
+[24]THREAT_BIDS.TXT
+[25]WATCHLISTED_BIDS.TXT
+[26]PRIMARY_BIDS.TXT
+# note currently these are exported from BIR but do not map to any I2AR count files and are not on the major-counts
+# (im still gonna include them in the bir array for future use if needed)
+[]MATCHML.TXT
+[]PURGED_ALL_BIDS.TXT
+[]TPWDES.TXT
 
 # I2AR: these are the array positions for the elements in the "ARRAY_I2AR_COUNT_FILES" array
 [0]atp_scores.txt
@@ -134,38 +142,40 @@ function CREATE_DIR () {
 ########################################################
 
 # Function to create the BIR I2AR and compare-counts directories ARRAYS
+# (note i rearanged the order to match I2AR count files and the compare directories should make for easier find copy commands down the road)
 function create_arrays () {
 
 	ARRAY_BIR_COUNT_FILES=(
-  ATP_BIDS.TXT
-  ATTACHMENTS_PHOTOS.TXT
-  ATTRIBUTES.TXT
-  BAT_GUIDS.TXT
-  BATCXI_GUIDS.TXT
-  BIDS.TXT
-  COMMENTS.TXT
-  EVENT_ATTACHMENTS.TXT
-  EVENT_COMMENTS.TXT
-  EVENT_ENCOUNTERS.TXT
-  EVENTS.TXT
-  EXPORTED_MATCHML.TXT
-  INACTIVE_USP_BIDS.TXT
-  MATCHML.TXT
-  NOMINATED_WATCHLISTED_BIDS.TXT
-  NONSENSOR_RIR_TCNS.TXT
-  NONSENSOR_UHN_TCNS.TXT
-  PREVIOUS_WATCHLISTED_BIDS.TXT
-  PRIMARY_BIDS.TXT
-  PRODUCTS.TXT
-  PURGED_ALL_BIDS.TXT
-  PURGED_BIDS_UNIQUE.TXT
-  QUARANTINED_BIDS.TXT
-  RELATIONSHIP.TXT
-  SENSORS.TXT
-  THREAT_BIDS.TXT
-  TPWDES.TXT
-  TWPDES_EXP.TXT
-  WATCHLISTED_BIDS.TXT
+	ATP_BIDS.TXT
+	ATTACHMENTS_PHOTOS.TXT
+	ATTRIBUTES.TXT
+	BAT_GUIDS.TXT
+	BATCXI_GUIDS.TXT
+	BIDS.TXT
+	COMMENTS.TXT
+	EVENT_ATTACHMENTS.TXT
+	EVENT_COMMENTS.TXT
+	EVENT_ENCOUNTERS.TXT
+	EVENTS.TXT
+	EXPORTED_MATCHML.TXT
+	NOMINATED_WATCHLISTED_BIDS.TXT
+	NONSENSOR_RIR_TCNS.TXT
+	NONSENSOR_UHN_TCNS.TXT
+	PREVIOUS_WATCHLISTED_BIDS.TXT
+	PRODUCTS.TXT
+	RELAITONSHIPS.TXT
+	SENSORS.TXT
+	TWPDES_EXP.TXT
+	ACTIVE_USP_BIDS.TXT
+	INACTIVE_USP_BIDS.TXT
+	PURGED_BIDS_UNIQUE.TXT
+	QUARANTINED_BIDS.TXT
+	THREAT_BIDS.TXT
+	WATCHLISTED_BIDS.TXT
+	PRIMARY_BIDS.TXT
+	MATCHML.TXT
+	PURGED_ALL_BIDS.TXT
+	TPWDES.TXT
   )
 
 
@@ -200,6 +210,7 @@ watchlisted.txt
 )
 
 # ARRAY_COMPARE_DIR (the directory that will hold the BIR and I2AR count files)
+# added total_identities_compare directory to the end of the array (this was created maually)
 	### Sample:ARRAY_1=($(ls /home/khai/DV-53-majorCount/major-counts-Oct-15-2019 | xargs -n 1 basename | cut -d '.' -f1 | sed 's/$/_compare/'))
 ARRAY_COMPARE_DIR=(
 atp_scores_compare
@@ -221,7 +232,6 @@ previously_watchlisted_compare
 products_compare
 relationships_compare
 sensor_total_compare
-total_identities_compare
 twpdes_compare
 usp_active_records_compare
 usp_inactive_records_compare
@@ -229,15 +239,42 @@ usp_purged_compare
 usp_quarantined_compare
 usp_threats_compare
 watchlisted_compare
+total_identities_compare
 )
 }
 #######################################################
 # Function to copy the BIR count files to the correct compare_major-counts/*
+# could wrap this in a loop but will keep it as is (for readablity) for now just in case i need to change what files map to what.
   function copy_bir_counts_2_dir () {
     echo "Copying the BI2R export_lists count files to the correct compare_major-counts/* directory..."
     find $BIR_counts_path -type f -name ${ARRAY_BIR_COUNT_FILES[0]} -exec cp {} ${FULL_PATH_COMPARE_DIR}${ARRAY_COMPARE_DIR[0]} \;
     find $BIR_counts_path -type f -name ${ARRAY_BIR_COUNT_FILES[1]} -exec cp {} ${FULL_PATH_COMPARE_DIR}${ARRAY_COMPARE_DIR[1]} \;
     find $BIR_counts_path -type f -name ${ARRAY_BIR_COUNT_FILES[2]} -exec cp {} ${FULL_PATH_COMPARE_DIR}${ARRAY_COMPARE_DIR[2]} \;
+		find $BIR_counts_path -type f -name ${ARRAY_BIR_COUNT_FILES[3]} -exec cp {} ${FULL_PATH_COMPARE_DIR}${ARRAY_COMPARE_DIR[3]} \;
+		find $BIR_counts_path -type f -name ${ARRAY_BIR_COUNT_FILES[4]} -exec cp {} ${FULL_PATH_COMPARE_DIR}${ARRAY_COMPARE_DIR[4]} \;
+		find $BIR_counts_path -type f -name ${ARRAY_BIR_COUNT_FILES[5]} -exec cp {} ${FULL_PATH_COMPARE_DIR}${ARRAY_COMPARE_DIR[5]} \;
+		find $BIR_counts_path -type f -name ${ARRAY_BIR_COUNT_FILES[6]} -exec cp {} ${FULL_PATH_COMPARE_DIR}${ARRAY_COMPARE_DIR[6]} \;
+		find $BIR_counts_path -type f -name ${ARRAY_BIR_COUNT_FILES[7]} -exec cp {} ${FULL_PATH_COMPARE_DIR}${ARRAY_COMPARE_DIR[7]} \;
+		find $BIR_counts_path -type f -name ${ARRAY_BIR_COUNT_FILES[8]} -exec cp {} ${FULL_PATH_COMPARE_DIR}${ARRAY_COMPARE_DIR[8]} \;
+		find $BIR_counts_path -type f -name ${ARRAY_BIR_COUNT_FILES[9]} -exec cp {} ${FULL_PATH_COMPARE_DIR}${ARRAY_COMPARE_DIR[9]} \;
+		find $BIR_counts_path -type f -name ${ARRAY_BIR_COUNT_FILES[10]} -exec cp {} ${FULL_PATH_COMPARE_DIR}${ARRAY_COMPARE_DIR[10]} \;
+		find $BIR_counts_path -type f -name ${ARRAY_BIR_COUNT_FILES[11]} -exec cp {} ${FULL_PATH_COMPARE_DIR}${ARRAY_COMPARE_DIR[11]} \;
+# From here on the BIR count file order was rearanged to match I2AR and the compare count directories
+		find $BIR_counts_path -type f -name ${ARRAY_BIR_COUNT_FILES[12]} -exec cp {} ${FULL_PATH_COMPARE_DIR}${ARRAY_COMPARE_DIR[12]} \;
+		find $BIR_counts_path -type f -name ${ARRAY_BIR_COUNT_FILES[13]} -exec cp {} ${FULL_PATH_COMPARE_DIR}${ARRAY_COMPARE_DIR[13]} \;
+		find $BIR_counts_path -type f -name ${ARRAY_BIR_COUNT_FILES[14]} -exec cp {} ${FULL_PATH_COMPARE_DIR}${ARRAY_COMPARE_DIR[14]} \;
+		find $BIR_counts_path -type f -name ${ARRAY_BIR_COUNT_FILES[15]} -exec cp {} ${FULL_PATH_COMPARE_DIR}${ARRAY_COMPARE_DIR[15]} \;
+		find $BIR_counts_path -type f -name ${ARRAY_BIR_COUNT_FILES[16]} -exec cp {} ${FULL_PATH_COMPARE_DIR}${ARRAY_COMPARE_DIR[16]} \;
+		find $BIR_counts_path -type f -name ${ARRAY_BIR_COUNT_FILES[17]} -exec cp {} ${FULL_PATH_COMPARE_DIR}${ARRAY_COMPARE_DIR[17]} \;
+		find $BIR_counts_path -type f -name ${ARRAY_BIR_COUNT_FILES[18]} -exec cp {} ${FULL_PATH_COMPARE_DIR}${ARRAY_COMPARE_DIR[18]} \;
+		find $BIR_counts_path -type f -name ${ARRAY_BIR_COUNT_FILES[19]} -exec cp {} ${FULL_PATH_COMPARE_DIR}${ARRAY_COMPARE_DIR[19]} \;
+		find $BIR_counts_path -type f -name ${ARRAY_BIR_COUNT_FILES[20]} -exec cp {} ${FULL_PATH_COMPARE_DIR}${ARRAY_COMPARE_DIR[20]} \;
+		find $BIR_counts_path -type f -name ${ARRAY_BIR_COUNT_FILES[21]} -exec cp {} ${FULL_PATH_COMPARE_DIR}${ARRAY_COMPARE_DIR[21]} \;
+		find $BIR_counts_path -type f -name ${ARRAY_BIR_COUNT_FILES[22]} -exec cp {} ${FULL_PATH_COMPARE_DIR}${ARRAY_COMPARE_DIR[22]} \;
+		find $BIR_counts_path -type f -name ${ARRAY_BIR_COUNT_FILES[23]} -exec cp {} ${FULL_PATH_COMPARE_DIR}${ARRAY_COMPARE_DIR[23]} \;
+		find $BIR_counts_path -type f -name ${ARRAY_BIR_COUNT_FILES[24]} -exec cp {} ${FULL_PATH_COMPARE_DIR}${ARRAY_COMPARE_DIR[24]} \;
+		find $BIR_counts_path -type f -name ${ARRAY_BIR_COUNT_FILES[25]} -exec cp {} ${FULL_PATH_COMPARE_DIR}${ARRAY_COMPARE_DIR[25]} \;
+		find $BIR_counts_path -type f -name ${ARRAY_BIR_COUNT_FILES[26]} -exec cp {} ${FULL_PATH_COMPARE_DIR}${ARRAY_COMPARE_DIR[26]} \;
     echo "Complete.. moving on.."
 }
 
@@ -249,10 +286,48 @@ watchlisted_compare
     find $I2AR_counts_path -type f -name ${ARRAY_I2AR_COUNT_FILES[0]} -exec cp {} ${FULL_PATH_COMPARE_DIR}${ARRAY_COMPARE_DIR[0]} \;
     find $I2AR_counts_path -type f -name ${ARRAY_I2AR_COUNT_FILES[1]} -exec cp {} ${FULL_PATH_COMPARE_DIR}${ARRAY_COMPARE_DIR[1]} \;
     find $I2AR_counts_path -type f -name ${ARRAY_I2AR_COUNT_FILES[2]} -exec cp {} ${FULL_PATH_COMPARE_DIR}${ARRAY_COMPARE_DIR[2]} \;
+		find $I2AR_counts_path -type f -name ${ARRAY_I2AR_COUNT_FILES[3]} -exec cp {} ${FULL_PATH_COMPARE_DIR}${ARRAY_COMPARE_DIR[3]} \;
+		find $I2AR_counts_path -type f -name ${ARRAY_I2AR_COUNT_FILES[4]} -exec cp {} ${FULL_PATH_COMPARE_DIR}${ARRAY_COMPARE_DIR[4]} \;
+		find $I2AR_counts_path -type f -name ${ARRAY_I2AR_COUNT_FILES[5]} -exec cp {} ${FULL_PATH_COMPARE_DIR}${ARRAY_COMPARE_DIR[5]} \;
+		find $I2AR_counts_path -type f -name ${ARRAY_I2AR_COUNT_FILES[6]} -exec cp {} ${FULL_PATH_COMPARE_DIR}${ARRAY_COMPARE_DIR[6]} \;
+		find $I2AR_counts_path -type f -name ${ARRAY_I2AR_COUNT_FILES[7]} -exec cp {} ${FULL_PATH_COMPARE_DIR}${ARRAY_COMPARE_DIR[7]} \;
+		find $I2AR_counts_path -type f -name ${ARRAY_I2AR_COUNT_FILES[8]} -exec cp {} ${FULL_PATH_COMPARE_DIR}${ARRAY_COMPARE_DIR[8]} \;
+		find $I2AR_counts_path -type f -name ${ARRAY_I2AR_COUNT_FILES[9]} -exec cp {} ${FULL_PATH_COMPARE_DIR}${ARRAY_COMPARE_DIR[9]} \;
+		find $I2AR_counts_path -type f -name ${ARRAY_I2AR_COUNT_FILES[10]} -exec cp {} ${FULL_PATH_COMPARE_DIR}${ARRAY_COMPARE_DIR[10]} \;
+		find $I2AR_counts_path -type f -name ${ARRAY_I2AR_COUNT_FILES[11]} -exec cp {} ${FULL_PATH_COMPARE_DIR}${ARRAY_COMPARE_DIR[11]} \;
+# From here on the BIR count file order was rearanged to match I2AR and the compare count directories
+		find $I2AR_counts_path -type f -name ${ARRAY_I2AR_COUNT_FILES[12]} -exec cp {} ${FULL_PATH_COMPARE_DIR}${ARRAY_COMPARE_DIR[12]} \;
+		find $I2AR_counts_path -type f -name ${ARRAY_I2AR_COUNT_FILES[13]} -exec cp {} ${FULL_PATH_COMPARE_DIR}${ARRAY_COMPARE_DIR[13]} \;
+		find $I2AR_counts_path -type f -name ${ARRAY_I2AR_COUNT_FILES[14]} -exec cp {} ${FULL_PATH_COMPARE_DIR}${ARRAY_COMPARE_DIR[14]} \;
+		find $I2AR_counts_path -type f -name ${ARRAY_I2AR_COUNT_FILES[15]} -exec cp {} ${FULL_PATH_COMPARE_DIR}${ARRAY_COMPARE_DIR[15]} \;
+		find $I2AR_counts_path -type f -name ${ARRAY_I2AR_COUNT_FILES[16]} -exec cp {} ${FULL_PATH_COMPARE_DIR}${ARRAY_COMPARE_DIR[16]} \;
+		find $I2AR_counts_path -type f -name ${ARRAY_I2AR_COUNT_FILES[17]} -exec cp {} ${FULL_PATH_COMPARE_DIR}${ARRAY_COMPARE_DIR[17]} \;
+		find $I2AR_counts_path -type f -name ${ARRAY_I2AR_COUNT_FILES[18]} -exec cp {} ${FULL_PATH_COMPARE_DIR}${ARRAY_COMPARE_DIR[18]} \;
+		find $I2AR_counts_path -type f -name ${ARRAY_I2AR_COUNT_FILES[19]} -exec cp {} ${FULL_PATH_COMPARE_DIR}${ARRAY_COMPARE_DIR[19]} \;
+		find $I2AR_counts_path -type f -name ${ARRAY_I2AR_COUNT_FILES[20]} -exec cp {} ${FULL_PATH_COMPARE_DIR}${ARRAY_COMPARE_DIR[20]} \;
+		find $I2AR_counts_path -type f -name ${ARRAY_I2AR_COUNT_FILES[21]} -exec cp {} ${FULL_PATH_COMPARE_DIR}${ARRAY_COMPARE_DIR[21]} \;
+
+		find $I2AR_counts_path -type f -name ${ARRAY_I2AR_COUNT_FILES[22]} -exec cp {} ${FULL_PATH_COMPARE_DIR}${ARRAY_COMPARE_DIR[22]} \;
+		find $I2AR_counts_path -type f -name ${ARRAY_I2AR_COUNT_FILES[23]} -exec cp {} ${FULL_PATH_COMPARE_DIR}${ARRAY_COMPARE_DIR[23]} \;
+		find $I2AR_counts_path -type f -name ${ARRAY_I2AR_COUNT_FILES[24]} -exec cp {} ${FULL_PATH_COMPARE_DIR}${ARRAY_COMPARE_DIR[24]} \;
+		find $I2AR_counts_path -type f -name ${ARRAY_I2AR_COUNT_FILES[25]} -exec cp {} ${FULL_PATH_COMPARE_DIR}${ARRAY_COMPARE_DIR[25]} \;
+
+			# for [26] need to get creative to find the <date of export>-bids_primary-post.txt it's outside of the major-counts directory
+			# add the directory for the <date of export>-bids_primary-post.txt : change the search pattern to "*-bids_primary-post.txt" and it should work.
+			# update the paths according to the TEST SERVER'S paths.
+		find /root/my_fedora_folder/DV-53-majorCount -type f -name "*-bids_primary-post.txt" -exec cp {} ${FULL_PATH_COMPARE_DIR}${ARRAY_COMPARE_DIR[26]} \;
+
+
+
+
     echo "All done!"
+		sleep 1
+
+
+
 }
 
-
+# TASK!! Create Function to copy the PRIMARY_BIDS.TXT and <date of export>-bids_primary-post.txt to total_identities_compare directory (this directory was created at the begining of the script)
 
 
 ####### Do stuff ##########
@@ -263,4 +338,5 @@ sleep 2
 copy_bir_counts_2_dir
 sleep 1
 copy_i2ar_counts_2_dir
+echo "BI2R and I2AR count file pairs copied to their corresponding: /var/compare_major-counts/* directories."
 exit 0;
