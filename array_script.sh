@@ -30,8 +30,8 @@ COMMENT1
 function CREAT_DIR () {
 
 	ARRAY_1=($(ls /home/khai/DV-53-majorCount/major-counts-Oct-15-2019 | xargs -n 1 basename | cut -d '.' -f1 | sed 's/$/_compare/'))
-
-	echo "Creating all the *_compare directories to hold BIR and I2AR count files.."
+  
+  echo "Creating all the *_compare directories to hold BIR and I2AR count files.."
 
 	#printf '%s\n' "${ARRAY_1[@]}"
 	#create directory to hold the other directories
