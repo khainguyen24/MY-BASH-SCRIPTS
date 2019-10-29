@@ -13,6 +13,10 @@
 # TODO: note: there is one file that makes up the "total_identites" Major count that is not in the "major-counts" folder:
 # <YYYY-MM-DD>-bids_primary-post.txt .. this needs to be backed up to the compare_major-counts folder as well.
 # 10/23/2019 - changing the /var/compare_major-counts to /var/compare_major-counts (note 18 instances of this path in the script.)
+# updated copy script from s3 funtion to use wildcard so i don't have to update this script every sprint with the new script name.
+# .. keep in mind that it will copy all the matches not jut the most current.
+
+
 if [ -z "$1" ]
 then
     echo -e "\nMissing parameter...exiting.\n"
@@ -65,11 +69,13 @@ function CHECK_S3_GET_SCRIPT () {
 	then
 		echo "AC2SP"
 		#echo $HOSTNAME_VALUE
-		aws s3 cp s3://i2ar-testteam-uac2sp/major_counts_compare_tool_SP82.sh /var/compare_major-counts
+		# old: aws s3 cp s3://i2ar-testteam-uac2sp/major_counts_compare_tool_SP82.sh /var/compare_major-counts
+    aws s3 cp s3://i2ar-testteam-uac2sp/ /var/compare_major-counts --recursive --exclude "*" --include "major_counts_compare_tool_SP*"
 	else
 		echo "GovCloud"
 		#echo $HOSTNAME_VALUE
-		aws s3 cp s3://testteam/Khai/Scripts/major_counts_compare_tool_SP82.sh /var/compare_major-counts
+		# old: aws s3 cp s3://testteam/Khai/Scripts/major_counts_compare_tool_SP82.sh /var/compare_major-counts
+    aws s3 cp s3://testteam/Khai/Scripts/ /var/compare_major-counts --recursive --exclude "*" --include "major_counts_compare_tool_SP*"
 	fi
 }
 
