@@ -359,7 +359,7 @@ total_identities_compare
 
 # Function to copy the I2AR count files to the correct compare_major-counts/*
   function copy_i2ar_counts_2_dir () {
-    echo "Copying the I2AR export_lists count files to the correct compare_major-counts/* directory..."
+    echo "Copying the I2AR major-counts files to the correct compare_major-counts/* directory..."
     find $I2AR_counts_path -type f -name ${ARRAY_I2AR_COUNT_FILES[0]} -exec cp {} ${FULL_PATH_COMPARE_DIR}${ARRAY_COMPARE_DIR[0]} \;
     find $I2AR_counts_path -type f -name ${ARRAY_I2AR_COUNT_FILES[1]} -exec cp {} ${FULL_PATH_COMPARE_DIR}${ARRAY_COMPARE_DIR[1]} \;
     find $I2AR_counts_path -type f -name ${ARRAY_I2AR_COUNT_FILES[2]} -exec cp {} ${FULL_PATH_COMPARE_DIR}${ARRAY_COMPARE_DIR[2]} \;
@@ -442,5 +442,5 @@ CHOWN_CHMOD_DIR
 sleep 2
 RENAME_DIR
 sleep 3
-echo "Complete! BI2R and I2AR count file pairs copied to their corresponding: /var/compare_major-counts/* directories."
+echo "Staging all files complete! BI2R and I2AR count file pairs copied to their corresponding: /var/compare_major-counts/* directories."
 exit 0;

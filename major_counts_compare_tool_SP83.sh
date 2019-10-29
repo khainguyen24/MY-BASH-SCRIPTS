@@ -10,13 +10,14 @@
 # CHANGE LOG
 # 10/22/2019 note for the matchml major count i had to change to use fgrep (due to the grep looking for range [])
 # 10/28/2019 added Major_count (row_count) as the first line in the output files
-# had to resolve on github
+# 10/29/2019 added HELP MENU Option flag -h
 
 #parameters check (Script calls for 4 parameters to be passed in)
 if [ "$#" -ne 4 ]
 then
-    echo -e "\nMissing parameter...exiting.\n"
-    echo "How to use this script:"
+    echo -e "\nMissing parameter...exiting."
+    echo -e "\nTo display the Help Menu use -h for help"
+    echo -e "\nHow to use this script:"
     echo "./major_counts_compare_tool.sh <patternList.txt> <BI2R_INPUT_FILE> <I2AR_INPUT_FILE> <outputfilename.txt>"
     echo -e "\nExample:"
     echo "./major_counts_compare_tool.sh patternList.txt ATTACHMENTS_PHOTOS.TXT attachments_photos.txt outputfilename.txt"
