@@ -5,8 +5,8 @@
 # Copy the txt files to the appropriate destination folder .. Ie *_compare folder
 
 # CHANGE LOG
-# 10/28/2019 rearanged the BIR array to match I2AR count files and the compare directory
-# udate the compare array aswell to match
+# 10/28/2019 rearanged the BIR array to match I2AR count files and the compare directory and just use the array positions to do the copy since the bir and i2ar count files don't always have the same file names.
+# update the compare array as well to match
 
 # Setting the variables for the script.
 BIR_counts_path=/root/my_fedora_folder/DV-53-majorCount/2019-10-15/export_lists/
