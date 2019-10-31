@@ -220,12 +220,16 @@ function totalCount () {
         I2AR_ROW_COUNT_TOTAL="$(cat $I2AR_INPUT_FILE | wc -l)"
 
         #testing awk formatting (not totally nessacary but intresting to learn)
+				# formatting variables for the first column in the output file. Maybe create a variables from the length of the first row in the pattern file and set it,
+				# pass the variables into awk to use as value in 50s the awk '{ printf "%-50s %-9s %-9s\n"
+				#COLUMN_LENGTH=50
+				#GET_COLUMN_LENGTH="$()"
         #echo "Total_Counts:${BASENAME}: BI2R:$BI2RTotal  I2AR:$I2ARTotal" | awk -F" " ' BEGIN { print "============================================================" , printf "%-45s %-9s %-9s\n" $1,$2,$3 , print "============================================================" }' >>  $OUTPUT_FILE
         # getting the row count from the count files (should correspond to the major count numbers)
-        echo "MAJOR_COUNTS_(row_count):\"${BASENAME}\" BI2R:$BI2R_ROW_COUNT_TOTAL  I2AR:$I2AR_ROW_COUNT_TOTAL" | awk '{ printf "%-50s %-9s %-9s\n" , $1,$2,$3 }' >>  $OUTPUT_FILE
+        echo "MAJOR_COUNTS_(row):\"${BASENAME}\" BI2R:$BI2R_ROW_COUNT_TOTAL  I2AR:$I2AR_ROW_COUNT_TOTAL" | awk '{ printf "%-50s %-9s %-9s\n" , $1,$2,$3 }' >>  $OUTPUT_FILE
 
         #print the second line in output file.. formatting using awk original line below can change spacing with these values "%-45s %-9s %-9s\n"
-        echo "TOTAL_COUNTS_(pattern_count):\"${BASENAME}\" BI2R:$BI2RTotal  I2AR:$I2ARTotal" | awk '{ printf "%-50s %-9s %-9s\n" , $1,$2,$3 }' >>  $OUTPUT_FILE
+        echo "TOTAL_COUNTS_(pattern):\"${BASENAME}\" BI2R:$BI2RTotal  I2AR:$I2ARTotal" | awk '{ printf "%-50s %-9s %-9s\n" , $1,$2,$3 }' >>  $OUTPUT_FILE
 
 
 }
