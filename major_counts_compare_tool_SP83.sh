@@ -226,11 +226,12 @@ function totalCount () {
 				#GET_COLUMN_LENGTH="$()"
         #echo "Total_Counts:${BASENAME}: BI2R:$BI2RTotal  I2AR:$I2ARTotal" | awk -F" " ' BEGIN { print "============================================================" , printf "%-45s %-9s %-9s\n" $1,$2,$3 , print "============================================================" }' >>  $OUTPUT_FILE
         # getting the row count from the count files (should correspond to the major count numbers)
-        echo "MAJOR_COUNTS_(row):\"${BASENAME}\" BI2R:$BI2R_ROW_COUNT_TOTAL  I2AR:$I2AR_ROW_COUNT_TOTAL" | awk '{ printf "%-50s %-9s %-9s\n" , $1,$2,$3 }' >>  $OUTPUT_FILE
+        echo "****************************************************************************************" >> $OUTPUT_FILE
+				echo "MAJOR_COUNTS_(row):\"${BASENAME}\" BI2R:$BI2R_ROW_COUNT_TOTAL  I2AR:$I2AR_ROW_COUNT_TOTAL" | awk '{ printf "%-50s %-9s %-9s\n" , $1,$2,$3 }' >>  $OUTPUT_FILE
 
         #print the second line in output file.. formatting using awk original line below can change spacing with these values "%-45s %-9s %-9s\n"
         echo "TOTAL_COUNTS_(pattern):\"${BASENAME}\" BI2R:$BI2RTotal  I2AR:$I2ARTotal" | awk '{ printf "%-50s %-9s %-9s\n" , $1,$2,$3 }' >>  $OUTPUT_FILE
-
+        echo "****************************************************************************************" >> $OUTPUT_FILE
 
 }
 
@@ -262,10 +263,38 @@ function patternCount () {
 
 }
 
+#function to get the diff in BIR and I2AR files:
+# In BI2R but NOT in I2AR
+# In I2AR but NOT in BI2R
+
+function getDiff_in_BIR_NOT_in_I2AR() {
+	echo
+	echo "**************** List Diffrences found in the BI2R and I2AR Count files ****************" >> $OUTPUT_FILE
+	echo "****************************************************************************************" >> $OUTPUT_FILE
+	echo "NOT in the BI2R \"$BI2R_INPUT_FILE\" file:" >> $OUTPUT_FILE
+	grep -Fvf $BI2R_INPUT_FILE $I2AR_INPUT_FILE >> /dev/null
+	if [ $? == 0 ]
+	then
+		grep -Fvf $BI2R_INPUT_FILE $I2AR_INPUT_FILE >> $OUTPUT_FILE
+	else
+		echo "\"...None found.\""
+	fi
+
+	echo
+	echo "NOT in the I2AR \"$I2AR_INPUT_FILE\" file:" >> $OUTPUT_FILE
+	grep -Fvf $I2AR_INPUT_FILE $BI2R_INPUT_FILE >> /dev/null
+	if [ $? == 0 ]
+	then
+		grep -Fvf $I2AR_INPUT_FILE $BI2R_INPUT_FILE >> $OUTPUT_FILE
+	else
+		echo "\"...None found.\"" >> $OUTPUT_FILE
+	fi
+}
+
 # run stuff (need to figure out if i need to add these var for it to work or if it's just redundant)
 totalCount $PATTERN_LIST  $BI2R_INPUT_FILE $I2AR_INPUT_FILE $OUTPUT_FILE
 patternCount $PATTERN_LIST $BI2R_INPUT_FILE $I2AR_INPUT_FILE $OUTPUT_FILE
-
+getDiff_in_BIR_NOT_in_I2AR $PATTERN_LIST  $BI2R_INPUT_FILE $I2AR_INPUT_FILE $OUTPUT_FILE
 echo
 echo -e "Done processing: [ $PATTERN_LIST | $BI2R_INPUT_FILE | $I2AR_INPUT_FILE ] >> $OUTPUT_FILE"
 echo -e "See $OUTPUT_FILE for the results.\n"
