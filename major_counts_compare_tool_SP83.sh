@@ -47,7 +47,7 @@ atp_scores_compare
 ├── ATP_BIDS.TXT
 └── atp_scores.txt
 
-BIR ATP_BIDS.TXT uses "-" in the "B28JM-R3J9" where I2ar does not "B28JMR3J9".
+ATP_BIDS.TXT uses \"-\" in the \"B28JM-R3J9\" where as I2AR does not \"B28JMR3J9\".
 Remove the dash in the ATP_BIDS.TXT and patternFile. Example: for testing: [sed 's/-//g' ATP_BIDS_dash_removed.TXT]
 for real:[sed -i 's/-//g' ATP_BIDS_dash_removed.TXT]
 
@@ -55,9 +55,42 @@ attachments_photos_compare
 ├── attachments_photos.txt
 └── ATTACHMENTS_PHOTOS.TXT
 
+Note: both BIR and I2AR \"attachments_photos\" count files uses prefixes. Copy the following prefixes to a new file to be used as a pattern file.
+for a more acurate token to token compairison.. remove all extra and keep just the id numbers.
+Note: VID_ATTACHMENT: should have been removed as of SP83 and should not be counted in attachments_photos.txt
+Example: Current File Type (prefixes) that make up the \"attachment_photos\" counts.
+
+ABIS_ATTACHMENT:
+AIMS_ATTACHMENT:
+BAT_ATTACHMENT:
+BAT-CXI_ATTACHMENT:
+BAT-CXI_PHOTO:
+BatCxiReport_ATTACHMENT:
+BatCxiReport_PHOTO:
+BAT_PHOTO:
+BatReport_ATTACHMENT:
+BatReport_PHOTO:
+IDENTITY_ATTACHMENT:
+IDENTITY_PHOTO:
+ProductInfo_ATTACHMENT:
+Sensor_THUMBNAIL:ABIS:
+Sensor_THUMBNAIL:BI2R:
+Sensor_THUMBNAIL:I2D:
+VID_ATTACHMENT:
+
 attributes_compare
 ├── attributes.txt
 └── ATTRIBUTES.TXT
+
+Note: both BIR and I2AR \"attributes\" count files uses prefixes. Copy the following prefixes to a new file to be used as a pattern file.
+Note: I2AR uses \"GEOLOC:\" instead of \"LOCATION:\"
+Example: Current File Type (prefixes) that make up the \"attributes\ counts.
+
+DATE:
+LIST:
+LOCATION:
+GEOLOC:
+TEXT:
 
 batcxi_records_total_compare
 ├── BATCXI_GUIDS.TXT
@@ -70,6 +103,9 @@ bat_records_total_compare
 bids_identities_compare
 ├── bids_identities.txt
 └── BIDS.TXT
+
+BIDS.TXT has an extra \"tab\" appended after each BID where as I2AR doe not.. example \"B28JM-TEST		\".
+Remove the extra \"tab\" in the BID.TXT and patternFile. Example: [cat BIDS.TXT | awk '{print \$1}' > BIDS_tabs_removed.TXT]
 
 comments_compare
 ├── comments.txt
@@ -134,6 +170,9 @@ twpdes_compare
 usp_active_records_compare
 ├── ACTIVE_USP_BIDS.TXT
 └── usp_active_records.txt
+
+ACTIVE_USP_BIDS.TXT has extra \"tab\" appended after each BID where as I2AR doe not.. example \"B28JM-TEST		\".
+Remove the extra \"tab\" in the ACTIVE_USP_BIDS.TXT and patternFile. Example: [cat ACTIVE_USP_BIDS.TXT | awk '{print \$1}' > ACTIVE_USP_BIDS_tabs_removed.TXT]
 
 usp_inactive_records_compare
 ├── INACTIVE_USP_BIDS.TXT
