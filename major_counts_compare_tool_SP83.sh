@@ -277,7 +277,7 @@ function getDiff_in_BIR_NOT_in_I2AR() {
 	then
 		grep -Fvf $BI2R_INPUT_FILE $I2AR_INPUT_FILE >> $OUTPUT_FILE
 	else
-		echo "\"...None found.\""
+		echo "\"...None found.\"" >> $OUTPUT_FILE
 	fi
 
 	echo
