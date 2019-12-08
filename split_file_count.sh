@@ -3,7 +3,7 @@
 
 # Script takes these required inputs parameters:
 #       1. (Required) filename for BI2R pre-split data type
-#       2. (Required) directory name that holds the post-split individual files for the data type
+#       2. (Required) directory name that holds the post-split individual files for the data type.
 
 
 #parameters check (Script calls for 2 parameters to be passed in)
