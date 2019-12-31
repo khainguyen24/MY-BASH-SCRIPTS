@@ -34,8 +34,8 @@ function GET_SPLIT_COUNTS () {
   I2AR_IMPORT=$2
   #set the BIR path to files
   echo
-  echo "************************ RESULTS: BI2R pre-split vs. I2AR post-split *********************************"
-  echo "*****************************************************************************************************"
+  echo -e "************************ \e[35mRESULTS: BI2R pre-split vs. I2AR post-split\e[0m *********************************"
+  echo "******************************************************************************************************"
   BI2R_EXPORT_SPLIT_FILE_PATH="$(find /var/ -type f -name $BI2R_EXPORT)"
   BIR_PRE_SPLIT_COUNT="$(grep I2AR:begin $BI2R_EXPORT_SPLIT_FILE_PATH | wc -l)"
   echo "BI2R pre-split  Count: [$BIR_PRE_SPLIT_COUNT] for \"$BI2R_EXPORT_SPLIT_FILE_PATH\""
