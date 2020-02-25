@@ -69,7 +69,7 @@ function backup_BLK_BID_Post_processing () {
   # command to move the BLKBID_FOLDER TO THE backup dir.
   mv ${AUTOMATED_SCRIPT_DIR}${BLKBID_FOLDER} ${FULL_PATH_DIR}
   mv ${AUTOMATED_SCRIPT_DIR}*bid_export_counts.txt ${FULL_PATH_DIR}
-  mv ${AUTOMATED_SCRIPT_DIR}*bid_mappings-primary_bids.txt ${FULL_PATH_DIR}
+  # mv ${AUTOMATED_SCRIPT_DIR}*bid_mappings-primary_bids.txt ${FULL_PATH_DIR}
   mv ${AUTOMATED_SCRIPT_DIR}*bids_primary-post.txt ${FULL_PATH_DIR}
   mv ${AUTOMATED_SCRIPT_DIR}*entityIndex.txt ${FULL_PATH_DIR}
   mv ${AUTOMATED_SCRIPT_DIR}*error.summary.txt ${FULL_PATH_DIR}
@@ -84,6 +84,9 @@ function backup_BLK_BID_Post_processing () {
   mv ${AUTOMATED_SCRIPT_DIR}major-counts* ${FULL_PATH_DIR}
   mv ${AUTOMATED_SCRIPT_DIR}nohup.out ${FULL_PATH_DIR}
   mv ${AUTOMATED_SCRIPT_DIR}reindexer.log ${FULL_PATH_DIR}
+  mv ${AUTOMATED_SCRIPT_DIR}reindexer-profiling.csv ${FULL_PATH_DIR}
+  mv ${AUTOMATED_SCRIPT_DIR}reindexer-profiling.html ${FULL_PATH_DIR}
+  mv ${AUTOMATED_SCRIPT_DIR}logs ${FULL_PATH_DIR}
   sleep 1
   # command to backup the properties files in ~/modules/main directory MODULES_MAIN_DIR
   echo "Moving all the properties files from ~/biometrics/resources/main directory.."
