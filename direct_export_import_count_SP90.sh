@@ -152,6 +152,7 @@ function display_help_menu() {
 ├── harmony
 │   └── harmony_links_data_export.xml *
 ├── identityCrosslinks
+│   └── identity_crosslink_export.xml *
 ├── identityHistory
 │   └── identity_history_export.xml * (ready for ingest as of SP90)
 ├── identityMasks
@@ -374,7 +375,7 @@ function display_help_menu() {
 │   └── <files within subdirectories>
 ├── identity_comments *
 │   └── <files within subdirectories>
-├── identityCrosslinks
+├── identityCrosslinks *
 │   └── <files within subdirectories>
 ├── identityEdits-identity_merge *
 │   └── <files within subdirectories>
