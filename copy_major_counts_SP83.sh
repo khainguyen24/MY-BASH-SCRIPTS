@@ -63,7 +63,7 @@ function CHECK_S3_GET_SCRIPT () {
 		echo "AC2SP"
 		#echo $HOSTNAME_VALUE
     # old: aws s3 cp s3://i2ar-testteam-uac2sp/major_counts_compare_tool_SP82.sh /var/compare_major-counts
-    aws s3 cp s3://i2ar-testteam-uac2sp/ /var/compare_major-counts --recursive --exclude "*" --include "major_counts_compare_tool_SP*"
+    aws s3 cp s3://i2ar-testteam-u/ /var/compare_major-counts --recursive --exclude "*" --include "major_counts_compare_tool_SP*"
 	else
 		echo "GovCloud"
 		#echo $HOSTNAME_VALUE

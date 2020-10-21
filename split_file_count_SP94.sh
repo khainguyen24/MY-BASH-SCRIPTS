@@ -192,7 +192,7 @@ function display_help_menu() {
 │   │   └── COM1
 │   ├── encounters (GroupMembership types)
 │   │   ├── ENC1
-│   ├── EVT1 (EVT* subdirectories are GroupInfo types)
+│   ├── EVT1 (EVT subdirectories are GroupInfo types)
 ├── export_lists (contains BIR count files)
 ├── harmony
 │   └── harmony_links_data_export_*.xml *
@@ -471,9 +471,9 @@ function display_help_menu() {
 ├── eventComments
 │   └── COM1
 ├── eventEncounters
-│   └──  <files within ENC* subdirectories>
+│   └──  <files within ENC subdirectories>
 ├── events
-│   └──  <files within EVT* subdirectories>
+│   └──  <files within EVT subdirectories>
 ├── harmony *
 │   └── <files within subdirectories>
 ├── identity_comments *
