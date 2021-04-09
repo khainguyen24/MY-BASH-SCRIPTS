@@ -1,0 +1,359 @@
+#!/bin/bash
+# Utility script that will check, or set bio.props for BI2R or I2AR ingest
+# to run script:
+# ./check_set_bio_prop.sh [ check | bi2r | i2ar | reindex-bids ]
+
+#create arrays of properties to check
+  ARRAY_1=(
+  iafis.ingestNoMatch=
+  wl-merge.bypass=
+  syphon.originalImporter=
+  ingest.originalImporter=
+  ingest.systemMode=
+  ingest-twpdes.bypass=
+  ingest.clamd.enabled=
+  #adding ingest-orphan* properties for UI Servers: "For the foreseeable future, on the UI server in"
+  ingest-orphan.enabled=
+  ingest-orphan.runDailyCheck=
+  ingest-twpdes.enabled=
+  wl-merge.enabled=
+  wl-hits.enabled=
+  ingest-wlhits.useBridgeQueue=
+  wl-export.enabled=
+  ingest-wlexport.createWatchml=
+  )
+USAGE_MESSAGE="$(echo 'To set bio.prop values for BI2R or I2AR... run the script agian use: check | bi2r | i2ar | reindex-bids')"
+
+#Check enabled bridges in the standalone-full-lab.xml
+function CHECK_STANDALONE_BRIDGES () {
+  echo -e "\e[35m********************************************************************"
+  echo -e "        Current enabled 'bridges' in standalone-full-lab.xml        "
+  echo -e "********************************************************************\e[0m"
+  grep bridge /opt/jboss/default/standalone/configuration/standalone-full-lab.xml
+  echo -e "\n"
+  sleep 1
+}
+
+#File in jboss deployments dir check
+function CHECK_DEPLOYMENTS () {
+  echo -e "\e[35m********************************************************************"
+  echo -e "      Current deployed wars in the standalone/deployement dir       "
+  echo -e "********************************************************************\e[0m"
+  echo -e "\n     *** Verify that ONLY the desired wars are present ***\n"
+  ls -1 /opt/jboss/default/standalone/deployments
+  echo -e "\n"
+  sleep 1
+}
+
+#1-Check bio.prop configs
+		function CHECK_BIO_PROP () {
+    echo -e "\e[35m********************************************************************"
+    echo -e "                   Current Bio.prop settings                        "
+    echo -e "********************************************************************\e[0m"
+    grep ${ARRAY_1[0]} /opt/jboss/jboss-eap-7.0/modules/mil/army/inscom/biometrics/resources/main/biometrics.properties
+		grep ${ARRAY_1[1]} /opt/jboss/jboss-eap-7.0/modules/mil/army/inscom/biometrics/resources/main/biometrics.properties
+		grep ${ARRAY_1[2]} /opt/jboss/jboss-eap-7.0/modules/mil/army/inscom/biometrics/resources/main/biometrics.properties
+		grep ${ARRAY_1[3]} /opt/jboss/jboss-eap-7.0/modules/mil/army/inscom/biometrics/resources/main/biometrics.properties
+		grep ${ARRAY_1[4]} /opt/jboss/jboss-eap-7.0/modules/mil/army/inscom/biometrics/resources/main/biometrics.properties
+    grep ${ARRAY_1[5]} /opt/jboss/jboss-eap-7.0/modules/mil/army/inscom/biometrics/resources/main/biometrics.properties
+    grep ${ARRAY_1[6]} /opt/jboss/jboss-eap-7.0/modules/mil/army/inscom/biometrics/resources/main/biometrics.properties
+    grep ${ARRAY_1[7]} /opt/jboss/jboss-eap-7.0/modules/mil/army/inscom/biometrics/resources/main/biometrics.properties
+    grep ${ARRAY_1[8]} /opt/jboss/jboss-eap-7.0/modules/mil/army/inscom/biometrics/resources/main/biometrics.properties
+    grep ${ARRAY_1[9]} /opt/jboss/jboss-eap-7.0/modules/mil/army/inscom/biometrics/resources/main/biometrics.properties
+    grep ${ARRAY_1[10]} /opt/jboss/jboss-eap-7.0/modules/mil/army/inscom/biometrics/resources/main/biometrics.properties
+    grep ${ARRAY_1[11]} /opt/jboss/jboss-eap-7.0/modules/mil/army/inscom/biometrics/resources/main/biometrics.properties
+    grep ${ARRAY_1[12]} /opt/jboss/jboss-eap-7.0/modules/mil/army/inscom/biometrics/resources/main/biometrics.properties
+    grep ${ARRAY_1[13]} /opt/jboss/jboss-eap-7.0/modules/mil/army/inscom/biometrics/resources/main/biometrics.properties
+    grep ${ARRAY_1[14]} /opt/jboss/jboss-eap-7.0/modules/mil/army/inscom/biometrics/resources/main/biometrics.properties
+
+		sleep 1
+    echo -e "\n"
+    #echo 'To set bio.prop values for BI2R or I2AR... run the script agian use: check | bi2r | i2ar | reindex-bids'
+
+    #Check enabled bridges in the standalone-full-lab.xml
+    CHECK_STANDALONE_BRIDGES
+    CHECK_DEPLOYMENTS
+    echo ${USAGE_MESSAGE}
+		}
+
+
+if [ -z "$1" ]
+then
+    echo -e "\e[35mMissing parm .. use: check | bi2r | i2ar | reindex-bids\e[0m"
+		sleep 1
+		exit 1;
+fi
+#---------------------------
+#the check flag
+if [ $1 = "check" ]
+then
+		echo -e "\e[35m\nCheckikng bio.prop properties...\e[0m\n"
+CHECK_BIO_PROP
+
+fi
+#---------------------------
+
+#2-Set bio.prop to BI2R
+if [ $1 = "bi2r" ]
+then
+    echo -e "\e[35m\nSetting bio.prop values for bi2r ingest...\e[0m\n"
+
+		function set_properties_BI2R () {
+		sed -i -e 's/^iafis.ingestNoMatch=.*/iafis.ingestNoMatch=true/g' -e 's/^wl-merge.bypass=.*/wl-merge.bypass=true/g' -e 's/^syphon.originalImporter=.*/syphon.originalImporter=BI2R/g' -e 's/^ingest.systemMode=.*/ingest.systemMode=BulkIngest/g' -e 's/^ingest-twpdes.bypass=.*/ingest-twpdes.bypass=true/g' -e 's/^ingest.clamd.enabled=.*/ingest.clamd.enabled=false/g' -e 's/^ingest.originalImporter=.*/ingest.originalImporter=BI2R/g' /opt/jboss/jboss-eap-7.0/modules/mil/army/inscom/biometrics/resources/main/biometrics.properties
+		}
+		set_properties_BI2R
+		sleep 1
+
+#Check bio.prop configs
+		CHECK_BIO_PROP
+		sleep 1
+		exit 0;
+
+fi
+
+#---------------------------
+
+#3-Set bio.prop to I2AR
+if [ $1 = "i2ar" ]
+then
+    echo -e "\e[35m\nSetting bio.prop values for i2ar ingest...\e[0m\n"
+
+		function set_properties_I2AR () {
+      sed -i -e 's/^iafis.ingestNoMatch=.*/iafis.ingestNoMatch=false/g' -e 's/^wl-merge.bypass=.*/wl-merge.bypass=false/g' -e 's/^syphon.originalImporter=.*/syphon.originalImporter=I2AR/g' -e 's/^ingest.systemMode=.*/ingest.systemMode=Normal/g' -e 's/^ingest-twpdes.bypass=.*/ingest-twpdes.bypass=false/g' -e 's/^ingest.clamd.enabled=.*/ingest.clamd.enabled=true/g' -e 's/^ingest.originalImporter=.*/ingest.originalImporter=I2AR/g' /opt/jboss/jboss-eap-7.0/modules/mil/army/inscom/biometrics/resources/main/biometrics.properties
+		}
+		set_properties_I2AR
+		sleep 1
+
+#Check bio.prop configs
+		CHECK_BIO_PROP
+		sleep 1
+		exit 0;
+fi
+#---------------------------
+
+
+#4-Set bio.prop for BI2R  "reindex-bids"
+if [ $1 = "reindex-bids" ]
+then
+    #1a Prep for full BID reindexing #SZ - running main.pl (2nd ingest) will remove all bridges from the file /opt/jboss/default/standalone/configuration/standalone-full-lab.xml.  You should restore the original "standalone-full-lab.xml.original" back to the standalone-full-lab.xml
+    function RESTORE_STANDALONE_FULL_LAB_ORIG () {
+      echo -e "\e[35mRestoring standalone-full-lab.xml from backup standalone-full-lab.xml.original..\e[0m"
+      rm -vf /opt/jboss/default/standalone/configuration/standalone-full-lab.xml
+      cp -vrp /opt/jboss/default/standalone/configuration/standalone-full-lab.xml.original /opt/jboss/default/standalone/configuration/standalone-full-lab.xml
+      echo -e "\e[35m...done!\e[0m\n"
+    }
+
+    function RESTORE_DEPLOYMENTS_BAK () {
+      echo -e "\e[35mRestoring deployments.bak -> standalone/deployments dir...\e[0m"
+      cp -vrp /opt/jboss/default/standalone/deployments.bak/* /opt/jboss/default/standalone/deployments
+      echo -e "\e[35m...done!\e[0m\n"
+    }
+
+      #0a) make sure that the XDOM -S bridge queue is re-removed
+    function REMOVE_XDOM-S_BRIDGE () {
+      echo -e "\e[35mMaking sure that the XDOM -S bridge queue is re-removed from standalone-full-lab.xml..\e[0m"
+      grep -A 3 '<jms-bridge name="xdomBridge"' /opt/jboss/default/standalone/configuration/standalone-full-lab.xml
+    #removing the xdomBrigde
+      sed -i -e '/<jms-bridge name="xdomBridge"/,+3d' /opt/jboss/default/standalone/configuration/standalone-full-lab.xml
+      echo -e "\e[35m...done!\e[0m\n"
+    }
+
+    #a) refClients: unsubscribe the idml clientId before we process BIDs -SZ IMPORTANT NOTE: if the server is restarted then refClient is automatically  starts up and resubscribes
+    function DISABLING_REFCLIENT_IDML () {
+      echo -e "\e[35mDisabling the IDML Refclient..\e[0m\n"
+      echo -e "\e[35mStopping the idml refclient..\e[0m"
+      systemctl stop idml
+      sleep 5
+      echo -e "\e[35mVerifying idml has stopped.. should see "Active: failed"\e[0m"
+      sleep 1
+      systemctl status idml
+      echo -e "\e[35m...done!\e[0m\n"
+      echo -e "\e[35mUnsubscribe to the idml clientID..\e[0m"
+      cd /opt/BirEsbReferenceClient; /usr/bin/java -Xms256m -Xmx512m -jar /opt/BirEsbReferenceClient/referenceClient.jar -p /opt/BirEsbReferenceClient/subscriber_idml.properties -a unsubscribe
+      sleep 2
+      echo -e "\e[35mMake sure you see unsubscribe message in log file ie.. cat /var/i2ar/esb/idml/client.log\e[0m"
+      echo -e "\e[35mShould see:  “Info - Client exeJar_jps_referenceClient_idml has successfully unsubscribed from  ssl://localhost:61616…”\e[0m"
+      tail -n 11 /var/i2ar/esb/idml/client.log
+      echo -e "\e[35m...done!\e[0m\n"
+}
+#---------------------
+#---------------------
+    #b) disable ingest-twpdes) "Removing twpdesBridge from standalone-full-lab.xml.."
+    function REMOVE_TWPDES_BRIDGES () {
+      echo -e "\e[35mRemoving twpdesBridge from standalone-full-lab.xml..\e[0m"
+      grep -A 3 '<jms-bridge name="twpdesBridge"' /opt/jboss/default/standalone/configuration/standalone-full-lab.xml
+    #removing the xdomBrigde
+      sed -i -e '/<jms-bridge name="twpdesBridge"/,+3d' /opt/jboss/default/standalone/configuration/standalone-full-lab.xml
+      echo -e "\e[35m...done!\e[0m\n"
+    }
+
+    #b) disable ingest-twpdes) "Removing twpdesMergeBridge from standalone-full-lab.xml.."
+    function REMOVE_TWPDESMERGE_BRIDGES () {
+      echo -e "\e[35mRemoving twpdesMergeBridge from standalone-full-lab.xml..\e[0m"
+      grep -A 3 '<jms-bridge name="twpdesMergeBridge"' /opt/jboss/default/standalone/configuration/standalone-full-lab.xml
+    #removing the xdomBrigde
+      sed -i -e '/<jms-bridge name="twpdesMergeBridge"/,+3d' /opt/jboss/default/standalone/configuration/standalone-full-lab.xml
+      echo -e "\e[35m...done!\e[0m\n"
+    }
+
+    #Undeploy ingest-twpdes.war"
+    function UNDEPLOY_INGEST-TWPDES-WAR () {
+      echo -e "\e[35mBacking up and Undeploying the ingest-twpdes.war ..\e[0m"
+      mkdir -v /opt/jboss/default/standalone/deployments.backup_Reindexing
+      mv -v /opt/jboss/default/standalone/deployments/ingest-twpdes.war* /opt/jboss/default/standalone/deployments.backup_Reindexing
+      echo -e "\e[35m...done!\e[0m\n"
+    #Setting bio.prop ingest-twpdes.enabled=False
+      echo -e "\e[35mSetting bio.prop ingest-twpdes.enabled=false ..\e[0m"
+      sed -i -e 's/^ingest-twpdes.enabled=.*/ingest-twpdes.enabled=false/g' /opt/jboss/jboss-eap-7.0/modules/mil/army/inscom/biometrics/resources/main/biometrics.properties
+      grep 'ingest-twpdes.enabled=' /opt/jboss/jboss-eap-7.0/modules/mil/army/inscom/biometrics/resources/main/biometrics.properties
+      echo -e "\e[35m...done!\e[0m\n"
+    }
+#---------------------
+#---------------------
+    #c) disable ingest-orphan) "Removing orphanBridge from standalone-full-lab.xml.."
+    function REMOVE_ORPHANBRIDGE () {
+      echo -e "\e[35mRemoving orphanBridge from standalone-full-lab.xml..\e[0m"
+      grep -A 3 '<jms-bridge name="orphanBridge"' /opt/jboss/default/standalone/configuration/standalone-full-lab.xml
+    #removing the xdomBrigde
+      sed -i -e '/<jms-bridge name="orphanBridge"/,+3d' /opt/jboss/default/standalone/configuration/standalone-full-lab.xml
+      echo -e "\e[35m...done!\e[0m\n"
+    }
+
+    #Undeploy ingest-orphan.war"
+    function UNDEPLOY_INGEST-ORPHAN-WAR () {
+      echo -e "\e[35mBacking up and Undeploying the ingest-orphan.war ..\e[0m"
+      #mkdir -v /opt/jboss/default/standalone/deployments.backup_Reindexing
+      mv -v /opt/jboss/default/standalone/deployments/ingest-orphan.war* /opt/jboss/default/standalone/deployments.backup_Reindexing
+      echo -e "\e[35m...done!\n"
+    #Setting bio.prop ingest-twpdes.enabled=False
+      echo -e "\e[35mSetting bio.prop ingest-orphan.enabled=false ..\e[0m"
+      sed -i -e 's/^ingest-orphan.enabled=.*/ingest-orphan.enabled=false/g' /opt/jboss/jboss-eap-7.0/modules/mil/army/inscom/biometrics/resources/main/biometrics.properties
+      grep 'ingest-orphan.enabled=' /opt/jboss/jboss-eap-7.0/modules/mil/army/inscom/biometrics/resources/main/biometrics.properties
+      echo -e "\e[35m...done!\e[0m\n"
+    }
+#---------------------
+#---------------------
+    #d) disable wl-merge) "Removing wlmergeBridge from standalone-full-lab.xml.."
+    function REMOVE_WLMERGEBRIDGE () {
+      echo -e "\e[35mRemoving wlmergeBridge from standalone-full-lab.xml..\e[0m"
+      grep -A 3 '<jms-bridge name="wlmergeBridge"' /opt/jboss/default/standalone/configuration/standalone-full-lab.xml
+    #removing the xdomBrigde
+      sed -i -e '/<jms-bridge name="wlmergeBridge"/,+3d' /opt/jboss/default/standalone/configuration/standalone-full-lab.xml
+      echo -e "\e[35m...done!\e[0m\n"
+    }
+
+    #Undeploy wl-merge.war"
+    function UNDEPLOY_WL-MERGE-WAR () {
+      echo -e "\e[35mBacking up and Undeploying the wl-merge.war ..\e[0m"
+      #mkdir -v /opt/jboss/default/standalone/deployments.backup_Reindexing
+      mv -v /opt/jboss/default/standalone/deployments/wl-merge.war* /opt/jboss/default/standalone/deployments.backup_Reindexing
+      echo -e "\e[35m...done!\e[0m\n"
+    #Setting bio.prop wl-merge.enabled=false
+      echo -e "\e[35mSetting bio.prop wl-merge.enabled=false ..\e[0m"
+      sed -i -e 's/^wl-merge.enabled=.*/wl-merge.enabled=false/g' /opt/jboss/jboss-eap-7.0/modules/mil/army/inscom/biometrics/resources/main/biometrics.properties
+      grep 'wl-merge.enabled=' /opt/jboss/jboss-eap-7.0/modules/mil/army/inscom/biometrics/resources/main/biometrics.properties
+      echo -e "\e[35m...done!\e[0m\n"
+    }
+#---------------------
+#---------------------
+    #d) disable wl-hits) "Removing wlhitsBridge from standalone-full-lab.xml.."
+    function REMOVE_WLHITSBRIDGE () {
+      echo -e "\e[35mRemoving wlhitsBridge from standalone-full-lab.xml..\e[0m"
+      grep -A 3 '<jms-bridge name="wlhitsBridge"' /opt/jboss/default/standalone/configuration/standalone-full-lab.xml
+    #removing the xdomBrigde
+      sed -i -e '/<jms-bridge name="wlhitsBridge"/,+3d' /opt/jboss/default/standalone/configuration/standalone-full-lab.xml
+      echo -e "\e[35m...done!\e[0m\n"
+    }
+
+    #Undeploy wl-hits.war"
+    function UNDEPLOY_WL-HITS-WAR () {
+      echo -e "\e[35mBacking up and Undeploying the wl-hits.war ..\e[0m"
+      #mkdir -v /opt/jboss/default/standalone/deployments.backup_Reindexing
+      mv -v /opt/jboss/default/standalone/deployments/wl-hits.war* /opt/jboss/default/standalone/deployments.backup_Reindexing
+      echo -e "\e[35m...done!\e[0m\n"
+    #Setting bio.prop  wl-hits.enabled=false – SZ "ingest-wlhits.useBridgeQueue=false"
+      echo -e "\e[35mSetting bio.prop wl-hits.enabled=false and ingest-wlhits.useBridgeQueue=false ..\e[0m"
+      sed -i -e 's/^wl-hits.enabled=.*/wl-hits.enabled=false/g' -e 's/^ingest-wlhits.useBridgeQueue=.*/ingest-wlhits.useBridgeQueue=false/g' /opt/jboss/jboss-eap-7.0/modules/mil/army/inscom/biometrics/resources/main/biometrics.properties
+      grep 'wl-hits.enabled=' /opt/jboss/jboss-eap-7.0/modules/mil/army/inscom/biometrics/resources/main/biometrics.properties
+      grep 'ingest-wlhits.useBridgeQueue=' /opt/jboss/jboss-eap-7.0/modules/mil/army/inscom/biometrics/resources/main/biometrics.properties
+      echo -e "\e[35m...done!\e[0m\n"
+    }
+#---------------------
+#---------------------
+    #d) disable wl-export) "Removing wl-export from standalone-full-lab.xml.."
+    function REMOVE_WLEXPORTBRIDGE () {
+      echo -e "\e[35mRemoving wlexportBridge from standalone-full-lab.xml..\e[0m"
+      grep -A 3 '<jms-bridge name="wlexportBridge"' /opt/jboss/default/standalone/configuration/standalone-full-lab.xml
+    #removing the xdomBrigde
+      sed -i -e '/<jms-bridge name="wlexportBridge"/,+3d' /opt/jboss/default/standalone/configuration/standalone-full-lab.xml
+      echo -e "\e[35m...done!\e[0m\n"
+    }
+
+    #Undeploy wl-export.war"
+    function UNDEPLOY_WL-EXPORT-WAR () {
+      echo -e "\e[35mBacking up and Undeploying the wl-export.war ..\e[0m"
+      #mkdir -v /opt/jboss/default/standalone/deployments.backup_Reindexing
+      mv -v /opt/jboss/default/standalone/deployments/wl-export.war* /opt/jboss/default/standalone/deployments.backup_Reindexing
+      echo -e "\e[35m...done!\e[0m\n"
+    #Setting bio.prop  wl-export.enabled=false – SZ "ingest-wlexport.createWatchml=false"
+      echo -e "\e[35mSetting wl-export.enabled=false and ingest-wlexport.createWatchml=false ..\e[0m"
+      sed -i -e 's/^wl-export.enabled=.*/wl-export.enabled=false/g' -e 's/^ingest-wlexport.createWatchml=.*/ingest-wlexport.createWatchml=false/g' /opt/jboss/jboss-eap-7.0/modules/mil/army/inscom/biometrics/resources/main/biometrics.properties
+      grep 'wl-export.enabled=' /opt/jboss/jboss-eap-7.0/modules/mil/army/inscom/biometrics/resources/main/biometrics.properties
+      grep 'ingest-wlexport.createWatchml=' /opt/jboss/jboss-eap-7.0/modules/mil/army/inscom/biometrics/resources/main/biometrics.properties
+      echo -e "\e[35m...done!\e[0m\n"
+    }
+#---------------------
+    #Set bio.prop for reindexing bi2r data
+		function set_properties_reindex-bids () {
+      echo -e "\e[35m\nSetting bio.prop general values for 'reindex-bids' bi2r data...\e[0m\n"
+		  sed -i -e 's/^iafis.ingestNoMatch=.*/iafis.ingestNoMatch=true/g' -e 's/^wl-merge.bypass=.*/wl-merge.bypass=true/g' -e 's/^syphon.originalImporter=.*/syphon.originalImporter=I2AR/g' -e 's/^ingest.systemMode=.*/ingest.systemMode=Normal/g' -e 's/^ingest-twpdes.bypass=.*/ingest-twpdes.bypass=true/g' -e 's/^ingest.clamd.enabled=.*/ingest.clamd.enabled=false/g'  -e 's/^ingest.originalImporter=.*/ingest.originalImporter=I2AR/g' -e 's/^ingest-orphan.enabled=.*/ingest-orphan.enabled=false/g' -e 's/^ingest-orphan.runDailyCheck=.*/ingest-orphan.runDailyCheck=false/g' /opt/jboss/jboss-eap-7.0/modules/mil/army/inscom/biometrics/resources/main/biometrics.properties
+		}
+
+    #g) clean out jboss/standalone/data/activemq
+    function CLEAN_OUT_ACTIVEMQ () {
+      echo -e "\e[35m\nCleaning out activmq directory...\e[0m\n"
+      rm -vrf /opt/jboss/default/standalone/data/activemq/*
+      rm -f /opt/jboss/default/standalone/deployments/{*.failed,*.deployed}
+      echo -e "\e[35m...done!\e[0m\n"
+    }
+
+    #File in jboss deployments dir check
+    function MOVE_WARS_4_REINDEXING-BIDS () {
+      echo -e "\e[35m\nMoving unwanted wars to backup...\e[0m\n"
+      mv -v /opt/jboss/default/standalone/deployments/{attachments-ws.war,event-smtp.war,idltService.war,ingest-autorun.war,ingest-purge.war,ingest-scanner.war,ingest-syphon.war,ingest-wl-hits.war,legacyUi.war,productService.war,socom.war,solrSearchService.war,uamtService.war,userService.war,usptService.war,watchlistService.war,xdom-dashboard.war,xdom-receiver.war} /opt/jboss/default/standalone/deployments.backup_Reindexing/
+      echo -e "\e[35m...done!\e[0m\n"
+    }
+
+    #File in jboss deployments dir check (moved out of this section so other flags can use it)
+    #Check enabled bridges in the standalone-full-lab.xml (moved out of this section so other flags can use it)
+
+
+##### Run Stuff within -reindex-bids flag #####
+RESTORE_STANDALONE_FULL_LAB_ORIG
+RESTORE_DEPLOYMENTS_BAK
+REMOVE_XDOM-S_BRIDGE
+DISABLING_REFCLIENT_IDML
+REMOVE_TWPDES_BRIDGES
+REMOVE_TWPDESMERGE_BRIDGES
+UNDEPLOY_INGEST-TWPDES-WAR
+REMOVE_ORPHANBRIDGE
+UNDEPLOY_INGEST-ORPHAN-WAR
+REMOVE_WLMERGEBRIDGE
+UNDEPLOY_WL-MERGE-WAR
+REMOVE_WLHITSBRIDGE
+UNDEPLOY_WL-HITS-WAR
+REMOVE_WLEXPORTBRIDGE
+UNDEPLOY_WL-EXPORT-WAR
+set_properties_reindex-bids
+CLEAN_OUT_ACTIVEMQ
+MOVE_WARS_4_REINDEXING-BIDS
+sleep 1
+
+#Check bio.prop configs
+		CHECK_BIO_PROP
+    echo -e "\n"
+    echo -e "\e[35m\n*** NOTE: You will need to modifiy the standalone-full-lab.xml prior to kicking off the Reindexing of Bids.. ie. create jmsUser, disable security and ApplicationRelam settings. ***\e[0m\n"
+		sleep 1
+		exit 0;
+
+fi
