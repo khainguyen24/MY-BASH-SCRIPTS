@@ -2,7 +2,7 @@
 #just adding some comments into this file from ATOM
 # LOV Configuration Stager finding and copying these files to use with configuration-importer.groovy and the borg-cli tool
 # Change Log:
-# 04/15/2020 - *** updated script to show the directory that was passed in, fixed header, fixed the 's' in attribute_lists'  in line 151 - find $BI2R_EXPORT_DIR -type d -name attribute_lists -exec cp -rp {} ${LOV_ATTR_DIR} \;'
+# 04/15/2020 - ******* updated script to show the directory that was passed in, fixed header, fixed the 's' in attribute_lists'  in line 151 - find $BI2R_EXPORT_DIR -type d -name attribute_lists -exec cp -rp {} ${LOV_ATTR_DIR} \;'
 # I recall having issues with the configuration-importer looking for 'attribute_list' and not 'attribute_lists' i had to remove the 's' in order for the configuration-importer to find it and process the attribute_lists in the statge directory
 # 04/27/2021 - updated to rename attribute_lists to attribute_list
 # 05/12/2021 line #143 commenting this out so turns out that the groupType.xml rename only needed if the file is placed in jboss main directory. if it's going to be imported with the configuration-importer then event_types.xml is filename
