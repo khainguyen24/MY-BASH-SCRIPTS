@@ -1,7 +1,10 @@
 #!/bin/bash
 #just adding some comments into this file from ATOM
 # LOV Configuration Stager finding and copying these files to use with configuration-importer.groovy and the borg-cli tool
-
+# Change Log:
+# 04/15/2020 - updated script to show the directory that was passed in, fixed header, fixed the 's' in attribute_lists'  in line 151 - find $BI2R_EXPORT_DIR -type d -name attribute_lists -exec cp -rp {} ${LOV_ATTR_DIR} \;'
+# I recall having issues with the configuration-importer looking for 'attribute_list' and not 'attribute_lists' i had to remove the 's' in order for the configuration-importer to find it and process the attribute_lists in the statge directory
+# 04/27/2021 - updated to rename attribute_lists to attribute_list
 
 # 1 ###############################################
 #Check to see if $1 parameter was specified"
@@ -24,16 +27,17 @@ fi
 # 2 ###############################################
 
 # Setting the global variables and creating dir for the script.
-
-echo -e "\e[35m*** BI2R LOVs & CONFIGs ***\e[0m\n"
+echo -e "\n\e[35m********************************************************************"
+echo -e "              ***  BI2R LOVs & CONFIGs STAGER TOOL ***              "
+echo -e "********************************************************************\e[0m"
 sleep 1
-echo -n "Creating LOV_CONFIG_STAGE directories.."
+echo -en "\e[35mCreating LOV_CONFIG_STAGE directories.."
 sleep 1
-Create_LOV_CONFIG_STAGED_dir="$(mkdir --parent /var/temp/LOV_CONFIG_STAGE/{LOVs/{attribute,attribute_list,bewl,success,error},CONFIGs})"
+Create_LOV_CONFIG_STAGED_dir="$(mkdir --parent /var/temp/LOV_CONFIG_STAGE/{LOVs/{bewl,success,error},CONFIGs})"
 # Defining paths
 LOV_BEWL_DIR=/var/temp/LOV_CONFIG_STAGE/LOVs/bewl/
-LOV_ATTR_DIR=/var/temp/LOV_CONFIG_STAGE/LOVs/
-LOV_ATTR_LIST_DIR=/var/temp/LOV_CONFIG_STAGE/LOVs/
+LOV_ATTR_DIR=/var/temp/LOV_CONFIG_STAGE/LOVs
+LOV_ATTR_LIST_DIR=/var/temp/LOV_CONFIG_STAGE/LOVs
 LOV_CONFIG_DIR=/var/temp/LOV_CONFIG_STAGE/CONFIGs/
 echo -e "..done!\n"
 # 3 #######################################################
@@ -116,7 +120,7 @@ function STAGE_LOV_CONFIG () {
       find $BI2R_EXPORT_DIR -type f -name ${ARRAY_LOV_BEWL_FILES[17]} -exec cp {} ${LOV_BEWL_DIR} \;
       find $BI2R_EXPORT_DIR -type f -name ${ARRAY_LOV_BEWL_FILES[18]} -exec cp {} ${LOV_BEWL_DIR} \;
       find $BI2R_EXPORT_DIR -type f -name ${ARRAY_LOV_BEWL_FILES[19]} -exec cp {} ${LOV_BEWL_DIR} \;
-
+      sleep 1
       echo -e "..done!\n"
       # 5 ######################################################
 
@@ -129,7 +133,6 @@ function STAGE_LOV_CONFIG () {
       find $BI2R_EXPORT_DIR -type f -name ${ARRAY_CONFIG_FILES[4]} -exec cp {} ${LOV_CONFIG_DIR} \;
       find $BI2R_EXPORT_DIR -type f -name ${ARRAY_CONFIG_FILES[5]} -exec cp {} ${LOV_CONFIG_DIR} \;
       find $BI2R_EXPORT_DIR -type f -name ${ARRAY_CONFIG_FILES[6]} -exec cp {} ${LOV_CONFIG_DIR} \;
-      sleep 1
 
       #6 ######################################################
       # find and rename namesIgnoreList.txt > namesIgnoreFile.txt | usp_rules_export.xml > usp-rules.xml
@@ -137,22 +140,30 @@ function STAGE_LOV_CONFIG () {
       find ${LOV_CONFIG_DIR} -type f -name ${ARRAY_CONFIG_FILES[6]} -exec mv {} ${LOV_CONFIG_DIR}usp-rules.xml \;
       find ${LOV_BEWL_DIR} -type f -name ${ARRAY_LOV_BEWL_FILES[1]} -exec mv {} ${LOV_BEWL_DIR}alertCategoryMovementJustification.xml \;
       find ${LOV_BEWL_DIR} -type f -name ${ARRAY_LOV_BEWL_FILES[11]} -exec mv {} ${LOV_BEWL_DIR}groupType.xml \;
+      sleep 1
       echo -e "..done!\n"
 }
 
 
 #function to copy over the LOV attribute and attribute_list
 function STAGE_LOV_ATTR () {
-echo -n "Staging the LOV attribute and LOV attribute_list..."
+echo -n "Copying LOV attribute and LOV attribute_lists..."
   find $BI2R_EXPORT_DIR -type d -name attribute -exec cp -rp {} ${LOV_ATTR_DIR} \;
-  find $BI2R_EXPORT_DIR -type d -name attribute_list -exec cp -rp {} ${LOV_ATTR_DIR} \;
+  find $BI2R_EXPORT_DIR -type d -name attribute_lists -exec cp -rp {} ${LOV_ATTR_LIST_DIR} \;
   sleep 1
   echo -e "...done!\n"
+  sleep 1
+  #need to rename the attribute_lists from the BIR export to attribute_list .. the configuration-importer.groovy script looks for attribute_lists
+  echo -n "Renaming attribute_lists to attribute_list.."
+  sleep 1
+  mv ${LOV_ATTR_LIST_DIR}/attribute_lists ${LOV_ATTR_LIST_DIR}/attribute_list
+  echo -e "...done!\n"
+  sleep 1
 }
 
 #change ownwership and permissions of /var/temp/LOV_CONFIG_STAGE
 function CHOWN_CHMOD () {
-  echo -n "changing ownership and permission on LOV_CONFIG_STAGE directory ..."
+  echo -n "Changing ownership and permission on LOV_CONFIG_STAGE directory ..."
   chown -R webadmin:webadmin /var/temp/LOV_CONFIG_STAGE/
   chmod -R 775 /var/temp/LOV_CONFIG_STAGE/
   sleep 1
@@ -168,5 +179,6 @@ STAGE_LOV_ATTR
 sleep 1
 CHOWN_CHMOD
 sleep 1
-echo "All LOVs and CONFIGs have been copied to: /var/temp/LOV_CONFIG_STAGE/"
+echo -en "All LOVs and CONFIGs from: $BI2R_EXPORT_DIR have been copied to:\e[0m \e[32m/var/temp/LOV_CONFIG_STAGE/\e[0m\n"
+echo -e "\n"
 exit 0;

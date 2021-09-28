@@ -1,0 +1,147 @@
+#!/bin/bash
+
+
+
+
+
+  sed -i '/<target destination="\/queue\/com.leidos.mb.solr.EventQueue"/a\            <\/jms-bridge>\n            <jms-bridge name="wlexportBridge" add-messageID-in-header="true" client-id="wlexportBridgeClient" subscription-name="wlexport" selector="type IN ('\''TSDB'\'','\''BAT'\'','\''BAT-CXI'\'','\''Sensor'\'','\''EntityEdit'\'', '\''UspTrackerData'\'','\''WatchlistEntry'\'','\''I2AR-MatchML'\'','\''Attribute'\'') AND state='\''Linked'\'' AND (routing IS NULL OR routing LIKE '\''%[wlexport]%'\'')" max-batch-time="500" max-batch-size="500" max-retries="1" failure-retry-interval="500" quality-of-service="DUPLICATES_OK">\n                <source destination="topic\/com.leidos.mb.spi.event.NotificationBus" connection-factory="java:\/ConnectionFactory"/>\n                <target destination="\/queue\/com.leidos.mb.wlexport.EventQueue" connection-factory="java:\/ConnectionFactory"\/>' /opt/jboss/default/standalone/configuration/standalone-full-lab.xml
+
+
+
+
+
+
+  sed -i '/<target destination="\/queue\/com.leidos.mb.solr.EventQueue"/a\            <\/jms-bridge>\n            <jms-bridge name="wlexportBridge" add-messageID-in-header="true" client-id="wlexportBridgeClient" subscription-name="wlexport" selector="type IN ('\''TSDB'\'','\''BAT'\'','\''BAT-CXI'\'','\''Sensor'\'','\''EntityEdit'\'', '\''UspTrackerData'\'','\''WatchlistEntry'\'','\''I2AR-MatchML'\'','\''Attribute'\'') AND state='\''Linked'\'' AND (routing IS NULL OR routing LIKE '\''%[wlexport]%'\'')" max-batch-time="500" max-batch-size="500" max-retries="1" failure-retry-interval="500" quality-of-service="DUPLICATES_OK">\n                <source destination="topic\/com.leidos.mb.spi.event.NotificationBus" connection-factory="java:\/ConnectionFactory"/>\n                <target destination="\/queue\/com.leidos.mb.wlexport.EventQueue" connection-factory="java:\/ConnectionFactory"\/>' /opt/jboss/default/standalone/configuration/standalone-full-lab.xml
+
+  (1:03:14 PM) Garth Hope:
+  #*               soft    core            0
+  #*               hard    rss             10000
+  #@student        hard    nproc           20
+  #@faculty        soft    nproc           20
+  #@faculty        hard    nproc           50
+  #ftp             hard    nproc           0
+  #@student        -       maxlogins       4
+
+  *          hard    maxlogins     10
+  root            hard    nofile  65536
+  root            soft    nofile  65536
+  activemq        hard    nofile  65536
+  activemq        hard    nofile  65536
+  webadmin        hard    nofile  65536
+  webadmin        soft    nofile  65536
+  # End of file
+  [root@i2ar-cm-test-web security]#
+
+
+#works
+  sed -i 's/# End of file/root            hard    nofile  65536\nroot            hard    nofile  65536\nactivemq        hard    nofile  65536\nactivemq        hard    nofile  65536\nwebadmin        hard    nofile  65536\nwebadmin        soft    nofile  65536\n# End of file/g' /var/temp/khai/test_file.txt
+sed 's/# End of file/root            hard    nofile  65536\nroot            hard    nofile  65536\nactivemq        hard    nofile  65536\nactivemq        hard    nofile  65536\nwebadmin        hard    nofile  65536\nwebadmin        soft    nofile  65536\n# End of file/g' /var/temp/khai/test_file.txt
+
+  [root@i2ar-test-yellow-1-ingest khai]# cat > test_file.txt
+# End of file
+^C
+[root@i2ar-test-yellow-1-ingest khai]#
+[root@i2ar-test-yellow-1-ingest khai]#
+[root@i2ar-test-yellow-1-ingest khai]# sed -i 's/# End of file/root            hard    nofile  65536\nroot            hard    nofile  65536\nactivemq        hard    nofile  65536\nactivemq        hard    nofile  65536\nwebadmin        hard    nofile  65536\nwebadmin        soft    nofile  65536\n# End of file/g' /var/temp/khai/test_file.txt
+[root@i2ar-test-yellow-1-ingest khai]#
+[root@i2ar-test-yellow-1-ingest khai]# cat test_file.txt
+root            hard    nofile  65536
+root            hard    nofile  65536
+activemq        hard    nofile  65536
+activemq        hard    nofile  65536
+webadmin        hard    nofile  65536
+webadmin        soft    nofile  65536
+# End of file
+[root@i2ar-test-yellow-1-ingest khai]#
+
+
+
+#sed command to add hard and soft nofile limits entries into limits.conf (jboss server: web and ingest)
+  sed -i 's/# End of file/root            hard    nofile  65536\nroot            hard    nofile  65536\nactivemq        hard    nofile  65536\nactivemq        hard    nofile  65536\nwebadmin        hard    nofile  65536\nwebadmin        soft    nofile  65536\n# End of file/g' /etc/security/limits.conf_backup_test
+
+
+
+  #testing
+    sed -i '/# End of file/root            hard    nofile  65536\nroot            hard    nofile  65536\nactivemq        hard    nofile  65536\nactivemq        hard    nofile  65536\nwebadmin        hard    nofile  65536\nwebadmin        soft    nofile  65536\n# End of file/c' /var/temp/khai/test_file.txt
+
+
+
+    #testing
+      sed 's/# End of file.*/root            hard    nofile  65536\nroot            hard    nofile  65536\nactivemq        hard    nofile  65536\nactivemq        hard    nofile  65536\nwebadmin        hard    nofile  65536\nwebadmin        soft    nofile  65536\n# End of file/g' /var/temp/khai/test_file.txt
+
+      #testing
+        sed '62s/# End of file/root            hard    nofile  65536\nroot            hard    nofile  65536\nactivemq        hard    nofile  65536\nactivemq        hard    nofile  65536\nwebadmin        hard    nofile  65536\nwebadmin        soft    nofile  65536\n# End of file/g' /var/temp/khai/test_file.txt
+
+
+
+  #two commands route
+
+  sed '62,$ d' /var/temp/khai/test_file.txt &&
+  sed 's/$/root            hard    nofile  65536\nroot            hard    nofile  65536\nactivemq        hard    nofile  65536\nactivemq        hard    nofile  65536\nwebadmin        hard    nofile  65536\nwebadmin        soft    nofile  65536\n# End of file/g' /var/temp/khai/test_file.txt
+
+
+
+  sed 's/$/root            hard    nofile  65536\nroot            hard    nofile  65536\nactivemq        hard    nofile  65536\nactivemq        hard    nofile  65536\nwebadmin        hard    nofile  65536\nwebadmin        soft    nofile  65536\n# End of file/c' /var/temp/khai/test_file.txt
+
+
+
+
+  #using Catch
+
+sed -i '62,$ d' /var/temp/khai/test_file.txt && cat <<EOT >> /var/temp/khai/test_file.txt
+root            hard    nofile  65536
+root            hard    nofile  65536
+activemq        hard    nofile  65536
+activemq        hard    nofile  65536
+webadmin        hard    nofile  65536
+webadmin        soft    nofile  65536
+# End of file
+EOT
+
+
+
+
+
+
+
+#Configure limits.conf for open files
+sed -i '61,$ d' /etc/security/limits.conf
+sed -i '$d' /etc/security/limits.conf
+echo *          hard    maxlogins     10 >> /etc/security/limits.conf
+echo root              soft  nofile    65536 >> /etc/security/limits.conf
+echo root              hard  nofile    65536 >> /etc/security/limits.conf
+echo activemq          soft  nofile    65536 >> /etc/security/limits.conf
+echo activemq          hard  nofile    65536 >> /etc/security/limits.conf
+echo webadmin          soft  nofile    65536 >> /etc/security/limits.conf
+echo webadmin          hard  nofile    65536 >> /etc/security/limits.conf
+echo "# End of file" >> /etc/security/limits.conf
+
+echo -e '\n' >> /var/temp/khai/test_file.txt
+
+test_1
+
+
+#Configure limits.conf for open files
+sed -i '61,$ d' /var/temp/khai/test_file.txt
+sed -i '$d' /var/temp/khai/test_file.txt
+echo -e "\n*          hard    maxlogins     10" >> /var/temp/khai/test_file.txt
+echo root              soft  nofile    65536 >> /var/temp/khai/test_file.txt
+echo root              hard  nofile    65536 >> /var/temp/khai/test_file.txt
+echo activemq          soft  nofile    65536 >> /var/temp/khai/test_file.txt
+echo activemq          hard  nofile    65536 >> /var/temp/khai/test_file.txt
+echo webadmin          soft  nofile    65536 >> /var/temp/khai/test_file.txt
+echo webadmin          hard  nofile    65536 >> /var/temp/khai/test_file.txt
+echo "# End of file" >> /var/temp/khai/test_file.txt
+
+#final tested and work
+#Configure limits.conf for open files
+sed -i '61,$ d' /etc/security/limits.conf
+sed -i '$d' /etc/security/limits.conf
+echo -e "\n*          hard    maxlogins     10" >> /etc/security/limits.conf
+echo root              soft  nofile    65536 >> /etc/security/limits.conf
+echo root              hard  nofile    65536 >> /etc/security/limits.conf
+echo activemq          soft  nofile    65536 >> /etc/security/limits.conf
+echo activemq          hard  nofile    65536 >> /etc/security/limits.conf
+echo webadmin          soft  nofile    65536 >> /etc/security/limits.conf
+echo webadmin          hard  nofile    65536 >> /etc/security/limits.conf
+echo "# End of file" >> /etc/security/limits.conf

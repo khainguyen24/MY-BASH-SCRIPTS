@@ -1,7 +1,9 @@
 #!/bin/bash
 # Utility script that will check, or set bio.props for BI2R or I2AR ingest
 # to run script:
-# ./check_set_bio_prop.sh [ check | bi2r | i2ar | reindex-bids ]
+# ./check_set_bio_prop.sh [ check | bi2r | i2ar | reindex-bids | reindex-tsdb-sensors]
+# change logs
+# 04/13/2021 - adding new switch reindex-tsdb-sensors
 
 #create arrays of properties to check
   ARRAY_1=(
@@ -22,7 +24,7 @@
   wl-export.enabled=
   ingest-wlexport.createWatchml=
   )
-USAGE_MESSAGE="$(echo 'To set bio.prop values for BI2R or I2AR... run the script agian use: check | bi2r | i2ar | reindex-bids')"
+USAGE_MESSAGE="$(echo 'To set bio.prop values for BI2R or I2AR... run the script agian use: check | bi2r | i2ar | reindex-bids | reindex-tsdb-sensors')"
 
 #Check enabled bridges in the standalone-full-lab.xml
 function CHECK_STANDALONE_BRIDGES () {
@@ -55,7 +57,7 @@ function ADD_PROPERTIES () {
   echo "### added by check_set_bio_prop_v2.3.sh ###
 ingest-orphan.enabled=false
 ingest-twpdes.enabled=false
-ingest-syphon.originalImporter=I2AR
+ingest.originalImporter=I2AR
 wl-merge.enabled=false
 wl-hits.enabled=false
 wl-export.enabled=false" | tee -a /opt/jboss/jboss-eap-7.0/modules/mil/army/inscom/biometrics/resources/main/biometrics.properties
@@ -97,7 +99,7 @@ wl-export.enabled=false" | tee -a /opt/jboss/jboss-eap-7.0/modules/mil/army/insc
 
 if [ -z "$1" ]
 then
-    echo -e "\e[35mMissing parm .. use: check | bi2r | i2ar | reindex-bids\e[0m"
+    echo -e "\e[35mMissing parm .. use: check | bi2r | i2ar | reindex-bids | reindex-tsdb-sensors\e[0m"
 		sleep 1
 		exit 1;
 fi
@@ -105,7 +107,7 @@ fi
 #the check flag
 if [ $1 = "check" ]
 then
-		echo -e "\e[35m\nCheckikng bio.prop properties...\e[0m\n"
+		echo -e "\e[35m\nCheckikng bio.prop, standalone-full-lab.xml and deployemnts..\e[0m\n"
 CHECK_BIO_PROP
 
 fi
@@ -114,7 +116,7 @@ fi
 #2-Set bio.prop to BI2R
 if [ $1 = "bi2r" ]
 then
-    echo -e "\e[35m\nSetting bio.prop values for bi2r ingest...\e[0m\n"
+    echo -e "\e[35m\nSetting bio.prop values, standalone-full-lab.xml and deployemnts for bi2r ingest...\e[0m\n"
 
 		function set_properties_BI2R () {
 		sed -i -e 's/^iafis.ingestNoMatch=.*/iafis.ingestNoMatch=true/g' -e 's/^wl-merge.bypass=.*/wl-merge.bypass=true/g' -e 's/^syphon.originalImporter=.*/syphon.originalImporter=BI2R/g' -e 's/^ingest.systemMode=.*/ingest.systemMode=BulkIngest/g' -e 's/^ingest-twpdes.bypass=.*/ingest-twpdes.bypass=true/g' -e 's/^ingest.clamd.enabled=.*/ingest.clamd.enabled=false/g' -e 's/^ingest.originalImporter=.*/ingest.originalImporter=BI2R/g' /opt/jboss/jboss-eap-7.0/modules/mil/army/inscom/biometrics/resources/main/biometrics.properties
@@ -134,7 +136,7 @@ fi
 #3-Set bio.prop to I2AR
 if [ $1 = "i2ar" ]
 then
-    echo -e "\e[35m\nSetting bio.prop values for i2ar ingest...\e[0m\n"
+    echo -e "\e[35m\nSetting bio.prop values, standalone-full-lab.xml and deployemnts for i2ar ingest...\e[0m\n"
 
 		function set_properties_I2AR () {
       sed -i -e 's/^iafis.ingestNoMatch=.*/iafis.ingestNoMatch=false/g' -e 's/^wl-merge.bypass=.*/wl-merge.bypass=false/g' -e 's/^syphon.originalImporter=.*/syphon.originalImporter=I2AR/g' -e 's/^ingest.systemMode=.*/ingest.systemMode=Normal/g' -e 's/^ingest-twpdes.bypass=.*/ingest-twpdes.bypass=false/g' -e 's/^ingest.clamd.enabled=.*/ingest.clamd.enabled=true/g' -e 's/^ingest.originalImporter=.*/ingest.originalImporter=I2AR/g' /opt/jboss/jboss-eap-7.0/modules/mil/army/inscom/biometrics/resources/main/biometrics.properties
@@ -341,7 +343,7 @@ then
     #File in jboss deployments dir check
     function MOVE_WARS_4_REINDEXING-BIDS () {
       echo -e "\e[35m\nMoving unwanted wars to backup...\e[0m\n"
-      mv -v /opt/jboss/default/standalone/deployments/{attachments-ws.war,event-smtp.war,idltService.war,ingest-autorun.war,ingest-purge.war,ingest-scanner.war,ingest-syphon.war,ingest-wl-hits.war,legacyUi.war,productService.war,socom.war,solrSearchService.war,uamtService.war,userService.war,usptService.war,watchlistService.war,xdom-dashboard.war,xdom-receiver.war,xdom-bundler.war,xdom-monitor.war} /opt/jboss/default/standalone/deployments.backup_Reindexing/
+      mv -v /opt/jboss/default/standalone/deployments/{attachments-ws.war,event-smtp.war,idltService.war,ingest-autorun.war,ingest-purge.war,ingest-scanner.war,ingest-syphon.war,ingest-wl-hits.war,legacyUi.war,loginUi.war,productService.war,socom.war,solrSearchService.war,uamtService.war,userService.war,usptService.war,watchlistService.war,xdom-dashboard.war,xdom-receiver.war} /opt/jboss/default/standalone/deployments.backup_Reindexing/
       echo -e "\e[35m...done!\e[0m\n"
     }
 
@@ -374,6 +376,88 @@ sleep 1
 		CHECK_BIO_PROP
     echo -e "\n"
     echo -e "\e[35m\n*** NOTE: You will need to modifiy the standalone-full-lab.xml prior to kicking off the Reindexing of Bids.. ie. create jmsUser, disable security and ApplicationRelam settings. ***\e[0m\n"
+		sleep 1
+		exit 0;
+
+fi
+
+#---------------------
+#---------------------
+# 5) Re-enable disabled services or deploy undeployed services. "TSDB and SENSORS"
+if [ $1 = "reindex-tsdb-sensors" ]
+then
+  echo -e "\e[35m*********************************************************************************************"
+  echo -e " Re-enable disabled services or deploy undeployed services for Indexing "TSDB and SENSORS" "
+  echo -e "*********************************************************************************************\e[0m"
+  sleep 1
+  #) backing up the standalone-full-lab.xml before messing with it.."
+      function BACKUP_STANDANLONE_FULL_LAB () {
+        echo -e "\e[35mBacking standalone-full-lab.xml before messing with it..\e[0m"
+        cp -rpv /opt/jboss/default/standalone/configuration/standalone-full-lab.xml /opt/jboss/default/standalone/configuration/standalone-full-lab.xml_b4_tsdb_sensors_config
+        sleep 1
+        echo -e "\e[35m...done!\e[0m\n"
+}
+      #c) add wlexportBridge) "ADD wlexportBridge to standalone-full-lab.xml.."
+      function ADD_WLEXPORTBRIDGE () {
+        echo -e "\e[35mAdding wlexportBridge to standalone-full-lab.xml..\e[0m"
+        sed -i '/<target destination="\/queue\/com.leidos.mb.solr.EventQueue"/a\            <\/jms-bridge>\n            <jms-bridge name="wlexportBridge" add-messageID-in-header="true" client-id="wlexportBridgeClient" subscription-name="wlexport" selector="type IN ('\''TSDB'\'','\''BAT'\'','\''BAT-CXI'\'','\''Sensor'\'','\''EntityEdit'\'', '\''UspTrackerData'\'','\''WatchlistEntry'\'','\''I2AR-MatchML'\'','\''Attribute'\'') AND state='\''Linked'\'' AND (routing IS NULL OR routing LIKE '\''%[wlexport]%'\'')" max-batch-time="500" max-batch-size="500" max-retries="1" failure-retry-interval="500" quality-of-service="DUPLICATES_OK">\n                <source destination="topic\/com.leidos.mb.spi.event.NotificationBus" connection-factory="java:\/ConnectionFactory"/>\n                <target destination="\/queue\/com.leidos.mb.wlexport.EventQueue" connection-factory="java:\/ConnectionFactory"\/>' /opt/jboss/default/standalone/configuration/standalone-full-lab.xml
+        sleep 1
+        echo -e "\e[35m...done!\e[0m\n"
+  }
+
+      #a) add twpdesBridge) "ADD twpdesBridge to standalone-full-lab.xml.."
+      function ADD_TWPDES_BRIDGES () {
+        echo -e "\e[35mAdding twpdesBridge to standalone-full-lab.xml..\e[0m"
+        sed -i '/<target destination="\/queue\/com.leidos.mb.wlexport.EventQueue"/a\            <\/jms-bridge>\n            <jms-bridge name="twpdesBridge" add-messageID-in-header="true" client-id="twpdesBridgeClient" subscription-name="twpdes" selector="(type='\''TSDB'\'' OR type='\''Sensor'\'') AND state='\''Linked'\'' AND (routing IS NULL OR routing LIKE '\''%[twpdes]%'\'')" max-batch-time="500" max-batch-size="500" max-retries="1" failure-retry-interval="500" quality-of-service="DUPLICATES_OK">\n                <source destination="topic\/com.leidos.mb.spi.event.NotificationBus" connection-factory="java:\/ConnectionFactory"\/>\n                <target destination="\/queue\/com.leidos.mb.twpdes.EventQueue" connection-factory="java:\/ConnectionFactory"\/>' /opt/jboss/default/standalone/configuration/standalone-full-lab.xml
+        sleep 1
+        echo -e "\e[35m...done!\e[0m\n"
+      }
+
+      #a) ADD twpdesMergeBridge) "ADD twpdesMergeBridge to standalone-full-lab.xml.."
+      function ADD__TWPDESMERGE_BRIDGES () {
+        echo -e "\e[35mAdding twpdesMergeBridge to standalone-full-lab.xml..\e[0m"
+        sed -i '/<target destination="\/queue\/com.leidos.mb.atp.EventQueue"/a\            <\/jms-bridge>\n            <jms-bridge name="twpdesMergeBridge" add-messageID-in-header="true" client-id="twpdesMergeBridgeClient" subscription-name="twpdesMerge" selector="type IN ('\''Merged'\'','\''Unmerged'\'')" max-batch-time="500" max-batch-size="500" max-retries="1" failure-retry-interval="500" quality-of-service="DUPLICATES_OK">\n                <source destination="topic\/com.leidos.mb.sg.MergeEventBus" connection-factory="java:\/ConnectionFactory"\/>\n                <target destination="\/queue\/com.leidos.mb.twpdes.merge.EventQueue" connection-factory="java:\/ConnectionFactory"\/>' /opt/jboss/default/standalone/configuration/standalone-full-lab.xml
+        sleep 1
+        echo -e "\e[35m...done!\e[0m\n"
+      }
+
+      #b) add wlmergeBridge) "ADD wlmergeBridge to standalone-full-lab.xml.."
+      function ADD_WLMERGEBRIDGE () {
+        echo -e "\e[35mAdding wlmergeBridge to standalone-full-lab.xml..\e[0m"
+        sed -i '/<target destination="\/queue\/com.leidos.mb.sg.EventQueue"/a\            <\/jms-bridge>\n            <jms-bridge name="wlmergeBridge" add-messageID-in-header="true" client-id="wlmergeBridgeClient" subscription-name="wlmerge" selector="type='\''Merged'\''" max-batch-time="500" max-batch-size="500" max-retries="1" failure-retry-interval="500" quality-of-service="DUPLICATES_OK">\n                <source destination="topic\/com.leidos.mb.sg.MergeEventBus" connection-factory="java:\/ConnectionFactory"\/>\n                <target destination="\/queue\/com.leidos.mb.wlmerge.EventQueue" connection-factory="java:\/ConnectionFactory"\/>' /opt/jboss/default/standalone/configuration/standalone-full-lab.xml
+        sleep 1
+        echo -e "\e[35m...done!\e[0m\n"
+      }
+
+      #Redeploy ingest-twpdes.war,wl-merge.war,wl-export.war"
+      function REDEPLOY_WARS_FOR_TSDB_SENSORS () {
+        echo -e "\e[35mRedeploying wars to Index TSDB and SENSORS: ingest-twpdes.war, wl-merge.war, wl-export.war ..\e[0m"
+        cp -rpv /opt/jboss/default/standalone/deployments.backup_Reindexing/{ingest-twpdes.war,wl-merge.war,wl-export.war} /opt/jboss/default/standalone/deployments/
+        sleep 1
+        echo -e "\e[35m...done!\e[0m\n"
+      }
+
+      #Enabling bio.props for Indexing TSDB and sensors
+      function SET_BIOPROP_FOR_TSDB_SENSORS () {
+        echo -e "\e[35mSetting bio.prop properties for Indexing TSDB and sensors ..\e[0m"
+        sed -i -e 's/^ingest-twpdes.enabled=.*/ingest-twpdes.enabled=true/g' -e 's/^wl-merge.enabled=.*/wl-merge.enabled=true/g' -e 's/^wl-export.enabled=.*/wl-export.enabled=true/g' -e 's/^ingest-wlexport.createWatchml=.*/ingest-wlexport.createWatchml=true/g' /opt/jboss/jboss-eap-7.0/modules/mil/army/inscom/biometrics/resources/main/biometrics.properties
+        sleep 1
+        echo -e "\e[35m...done!\e[0m\n"
+  		}
+
+#RUN Stuff
+BACKUP_STANDANLONE_FULL_LAB
+ADD_WLEXPORTBRIDGE
+ADD_TWPDES_BRIDGES
+ADD__TWPDESMERGE_BRIDGES
+ADD_WLMERGEBRIDGE
+REDEPLOY_WARS_FOR_TSDB_SENSORS
+SET_BIOPROP_FOR_TSDB_SENSORS
+#Check configurations after
+CHECK_BIO_PROP
+    echo -e "\n"
+    echo -e "\e[35m\n*** NOTE: You will need to Confirm that services are re-enabled by looking at the sys/systemStatus page and the sys/queues page. ***\e[0m\n"
+    echo -e "\e[35m\n*** If all looks good.. push a CategoryDirectives.xml to the borg table and then you can proceed with step "7 Catch-up TWPDES" ***\e[0m\n"
 		sleep 1
 		exit 0;
 
